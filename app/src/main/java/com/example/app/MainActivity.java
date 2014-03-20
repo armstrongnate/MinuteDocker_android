@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        navigateToLogin();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -60,6 +62,13 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 }
