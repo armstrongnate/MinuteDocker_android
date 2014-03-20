@@ -9,8 +9,50 @@
     tools:context="com.example.app.LoginActivity$PlaceholderFragment">
 
     <TextView
-        android:text="Login"
+        android:text="MinuteDockr"
+        android:id="@+id/logo_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your API Key to get started:"
+        android:id="@+id/help_text"
+        android:layout_below="@+id/logo_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:textSize="16dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/api_key"
+        android:layout_below="@+id/help_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@color/white_color"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Retrieve Account"
+        android:id="@+id/button"
+        android:layout_below="@+id/api_key"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@color/md_button_bg"
+        android:textColor="@color/white_color"
+        android:textSize="16dp"/>
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/api_key_help"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/help_icon"/>
 
 </RelativeLayout>
