@@ -28,15 +28,18 @@ public class MinuteDockr {
     public static final String API_KEY_PREFS_KEY = "api_key";
     private static final String MY_API_KEY = "0e3ec0f390e9b7aff763d64d8cea6c50";
     private static final String TAG = "MinuteDockr";
+
+    public static String baseUrl = "https://minutedock.com/api/v1/";
+    public static String currentEntryPath = "entries/current.json";
+    public static String currentAccountPath = "accounts/current.json";
+
     private static MinuteDockr instance = null;
     public SharedPreferences sharedPreferences;
     public Context context;
-    public String currentApiKey;
 
     private MinuteDockr(Context appContext) {
         context = appContext;
         sharedPreferences = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        currentApiKey = sharedPreferences.getString(API_KEY_PREFS_KEY, "");
     }
 
     public static MinuteDockr getInstance(Context context) {
@@ -44,6 +47,22 @@ public class MinuteDockr {
             instance = new MinuteDockr(context);
         }
         return instance;
+    }
+
+    public String getCurrentEntryUrl() {
+        return String.format("%s%s?api_key=%s", baseUrl, currentEntryPath, getCurrentApiKey());
+    }
+
+    public String getCurrentAccountUrl() {
+        return String.format("%s%s?api_key=%s", baseUrl, currentAccountPath, getCurrentApiKey());
+    }
+
+    public String getCurrentAccountUrl(String apiKey) {
+        return String.format("%s%s?api_key=%s", baseUrl, currentAccountPath, apiKey);
+    }
+
+    public String getCurrentApiKey() {
+        return sharedPreferences.getString(API_KEY_PREFS_KEY, "");
     }
 
     public View customDialogView(int titleTextId, int messageTextId) {

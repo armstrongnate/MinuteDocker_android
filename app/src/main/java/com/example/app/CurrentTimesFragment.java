@@ -47,14 +47,17 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
                     int minutes = (int)Math.floor(currentEntry.duration / 60) % 60;
                     int seconds = currentEntry.duration % 60;
                     currentDuration.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-                    Log.i(TAG, "Entry duration: " + currentEntry.duration);
                 }
                 catch (JSONException e) {
                     Log.e(TAG, "JSONException caught: ", e);
                 }
+                catch (NullPointerException e) {
+                    Log.e(TAG, "Null pointer exception caught: ", e);
+                }
             }
         });
-        apiTask.execute("https://minutedock.com/api/v1/entries/current.json?api_key=0e3ec0f390e9b7aff763d64d8cea6c50");
+        Log.i(TAG, MinuteDockr.getInstance(getActivity()).getCurrentEntryUrl());
+        apiTask.execute(MinuteDockr.getInstance(getActivity()).getCurrentEntryUrl());
     }
 
     private void setTodayTime() {

@@ -28,17 +28,28 @@ public class Entry {
     public static Entry fromJSONObject(JSONObject jsonObject) {
         Entry entry = new Entry();
         try {
-            entry.account_id = jsonObject.getInt("account_id");
-            entry.contact_id = jsonObject.getInt("contact_id");
-            entry.description = jsonObject.getString("description");
-            entry.duration = jsonObject.getInt("duration");
-            entry.external_id = jsonObject.getInt("id");
-            entry.logged_at = jsonObject.getString("logged_at");
-            entry.project_id = jsonObject.getInt("project_id");
-            entry.user_id = jsonObject.getInt("user_id");
-            entry.active = jsonObject.getBoolean("timer_active");
-            entry.updated_at = jsonObject.getString("updated_at");
-            entry.taskIds = jsonObject.getJSONArray("task_ids");
+            if (!jsonObject.isNull("account_id"))
+                entry.account_id = jsonObject.getInt("account_id");
+            if (!jsonObject.isNull("contact_id"))
+                entry.contact_id = jsonObject.getInt("contact_id");
+            if (!jsonObject.isNull("description"))
+                entry.description = jsonObject.getString("description");
+            if (!jsonObject.isNull("duration"))
+                entry.duration = jsonObject.getInt("duration");
+            if (!jsonObject.isNull("id"))
+                entry.external_id = jsonObject.getInt("id");
+            if (!jsonObject.isNull("logged_at"))
+                entry.logged_at = jsonObject.getString("logged_at");
+            if (!jsonObject.isNull("project_id"))
+                entry.project_id = jsonObject.getInt("project_id");
+            if (!jsonObject.isNull("user_id"))
+                entry.user_id = jsonObject.getInt("user_id");
+            if (!jsonObject.isNull("timer_active"))
+                entry.active = jsonObject.getBoolean("timer_active");
+            if (!jsonObject.isNull("updated_at"))
+                entry.updated_at = jsonObject.getString("updated_at");
+            if (!jsonObject.isNull("task_ids"))
+                entry.taskIds = jsonObject.getJSONArray("task_ids");
         }
         catch (Exception e) {
             Log.e(TAG, "Exception caught: ", e);

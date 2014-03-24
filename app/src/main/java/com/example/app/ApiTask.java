@@ -31,7 +31,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        int responseCode = -1;
+        int responseCode;
         String responseData = null;
         try {
             URL currentAccountUrl = new URL(strings[0]);

@@ -3,6 +3,7 @@ package com.example.app;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -88,7 +90,7 @@ public class LoginActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
             MinuteDockr app = MinuteDockr.getInstance(getActivity());
-            String apiKeyString = app.currentApiKey;
+            String apiKeyString = app.getCurrentApiKey();
 
             TextView logoText = (TextView) rootView.findViewById(R.id.logo_text);
             TextView helpText = (TextView) rootView.findViewById(R.id.help_text);
@@ -132,8 +134,26 @@ public class LoginActivity extends ActionBarActivity {
 
                 case R.id.button:
                     if (isNetworkAvailable()) {
-                        GetCurrentAccountTask getAccountTask = new GetCurrentAccountTask();
-                        getAccountTask.execute();
+                        ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+                            @Override
+                            public void onTaskComplete(String result) {
+                                try {
+                                    MinuteDockr app = MinuteDockr.getInstance(getActivity());
+                                    app.sharedPreferences.edit().putString(app.API_KEY_PREFS_KEY, apiKey.getText().toString()).commit();
+                                    JSONObject jsonResponse = new JSONObject(result);
+                                    app.sharedPreferences.edit().putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, jsonResponse.getInt("id")).commit();
+                                    Intent intent = new Intent(getActivity(), CurrentEntryActivity.class);
+                                    startActivity(intent);
+                                }
+                                catch (JSONException e) {
+                                    Log.e(TAG, "JSONException caught: ", e);
+                                }
+                                catch (NullPointerException e) {
+                                    Log.e(TAG, "NullPointerException caught: ", e);
+                                }
+                            }
+                        });
+                        apiTask.execute(MinuteDockr.getInstance(getActivity()).getCurrentAccountUrl(apiKey.getText().toString()));
                     }
                     else {
                         // show network error alert dialog
@@ -159,45 +179,6 @@ public class LoginActivity extends ActionBarActivity {
             return networkInfo != null && networkInfo.isConnected();
         }
 
-        public class GetCurrentAccountTask extends AsyncTask<Object, Void, String> {
-
-            @Override
-            protected String doInBackground(Object... arg0) {
-                int responseCode = -1;
-                try {
-                    URL currentAccountUrl = new URL("https://minutedock.com/api/v1/accounts/current.json?api_key=" + apiKey.getText().toString());
-                    HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
-                    connection.connect();
-
-                    responseCode = connection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        MinuteDockr app = MinuteDockr.getInstance(getActivity());
-                        prefs.edit().putString(app.API_KEY_PREFS_KEY, apiKey.getText().toString()).commit();
-
-                        InputStream inputStream = connection.getInputStream();
-                        Reader reader = new InputStreamReader(inputStream);
-                        int contentLength = connection.getContentLength();
-                        char[] charArray = new char[contentLength];
-                        reader.read(charArray);
-                        String responseData = new String(charArray);
-
-                        JSONObject jsonResponse = new JSONObject(responseData);
-                        prefs.edit().putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, jsonResponse.getInt("id")).commit();
-                    }
-                }
-                catch (MalformedURLException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
-                catch (IOException e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
-                catch (Exception e) {
-                    Log.e(TAG, "Exception caught: ", e);
-                }
-
-                return "Code: " + responseCode;
-            }
-        }
     }
 
 }
