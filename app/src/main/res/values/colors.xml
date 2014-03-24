@@ -4,4 +4,6 @@
     <color name="translucent_red">#80ff0000</color>
     <color name="white_color">#ffffff</color>
     <color name="md_button_bg">#e2a301</color>
+    <color name="md_green">#5e9217</color>
+    <color name="md_dark_green">#1d3004</color>
 </resources>

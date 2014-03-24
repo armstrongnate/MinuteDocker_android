@@ -3,6 +3,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.app.LoginActivity"
-    tools:ignore="MergeRootFrame"
-    android:background="@color/md_green"/>
+    android:background="#dfdfdf"
+    tools:context="com.example.app.CurrentEntryActivity"
+    tools:ignore="MergeRootFrame" />

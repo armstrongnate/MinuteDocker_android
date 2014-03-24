@@ -1,7 +1,7 @@
 package com.example.app;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,26 +9,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Build;
 
-public class MainActivity extends ActionBarActivity {
-    protected MinuteDockr app;
+public class CurrentEntryActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        app = MinuteDockr.getInstance(this);
-        int currentAccountId = app.sharedPreferences.getInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, -1);
-        if (currentAccountId != -1) {
-            navigateToCurrentEntry();
-        }
-        else {
-            navigateToLogin();
-        }
+        setContentView(R.layout.activity_current_entry);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new CurrentTimesFragment())
                     .commit();
         }
     }
@@ -38,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.current_entry, menu);
         return true;
     }
 
@@ -65,23 +58,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_current_entry, container, false);
             return rootView;
         }
-    }
-
-    private void navigateToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    private void navigateToCurrentEntry() {
-        Intent intent = new Intent(this, CurrentEntryActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
     }
 
 }

@@ -10,4 +10,6 @@
     <string name="ok">Ok</string>
     <string name="no_internet_dialog_title">Network Error</string>
     <string name="no_internet_dialog_message">You must be connected to the internet in order to authenticate with MinuteDock.</string>
+    <string name="title_activity_current_entry">CurrentEntryActivity</string>
+
 </resources>

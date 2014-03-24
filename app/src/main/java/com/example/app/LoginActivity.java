@@ -88,8 +88,7 @@ public class LoginActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
             MinuteDockr app = MinuteDockr.getInstance(getActivity());
-            prefs = app.sharedPreferences;
-            String apiKeyString = prefs.getString(app.API_KEY_PREFS_KEY, "");
+            String apiKeyString = app.currentApiKey;
 
             TextView logoText = (TextView) rootView.findViewById(R.id.logo_text);
             TextView helpText = (TextView) rootView.findViewById(R.id.help_text);
@@ -166,7 +165,6 @@ public class LoginActivity extends ActionBarActivity {
             protected String doInBackground(Object... arg0) {
                 int responseCode = -1;
                 try {
-                    Log.i(TAG, "api key: " + apiKey.getText().toString());
                     URL currentAccountUrl = new URL("https://minutedock.com/api/v1/accounts/current.json?api_key=" + apiKey.getText().toString());
                     HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
                     connection.connect();
@@ -184,7 +182,6 @@ public class LoginActivity extends ActionBarActivity {
                         String responseData = new String(charArray);
 
                         JSONObject jsonResponse = new JSONObject(responseData);
-                        Log.i(TAG, "Response id: " + jsonResponse.getInt("id"));
                         prefs.edit().putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, jsonResponse.getInt("id")).commit();
                     }
                 }

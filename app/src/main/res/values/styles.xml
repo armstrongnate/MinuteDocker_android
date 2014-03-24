@@ -2,7 +2,32 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowBackground">@drawable/app_background</item>
+        <!-- <item name="android:windowBackground">@drawable/app_background</item> -->
+    </style>
+
+    <style name="textCenter" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="textCenter.currentTimes">
+    </style>
+
+    <style name="textCenter.currentTimes.dayWeek">
+        <item name="android:textColor">#4c4c4c</item>
+    </style>
+    
+    <style name="textCenter.currentTimes.labels">
+        <item name="android:textColor">#959595</item>
+    </style>
+    
+    <style name="textCenter.currentTimes.now">
+        <item name="android:textColor">@color/md_green</item>
+    </style>
+
+    <style name="timeBox">
+        <item name="android:background">#f8f8f8</item>
     </style>
 
 </resources>
