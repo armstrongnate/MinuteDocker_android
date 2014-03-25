@@ -6,4 +6,5 @@
     <color name="md_button_bg">#e2a301</color>
     <color name="md_green">#5e9217</color>
     <color name="md_dark_green">#1d3004</color>
+    <color name="entry_border">#e4e4e4</color>
 </resources>

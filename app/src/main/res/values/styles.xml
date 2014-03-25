@@ -16,6 +16,7 @@
 
     <style name="textCenter.currentTimes.dayWeek">
         <item name="android:textColor">#4c4c4c</item>
+        <item name="android:textSize">28sp</item>
     </style>
     
     <style name="textCenter.currentTimes.labels">

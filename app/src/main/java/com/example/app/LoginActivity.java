@@ -131,6 +131,7 @@ public class LoginActivity extends ActionBarActivity {
             switch (v.getId()) {
                 case R.id.api_key_help:
                     apiKeyHelpDialog.show();
+                    break;
 
                 case R.id.button:
                     if (isNetworkAvailable()) {
@@ -169,6 +170,7 @@ public class LoginActivity extends ActionBarActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }
+                    break;
             }
         }
 

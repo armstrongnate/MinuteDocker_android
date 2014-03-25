@@ -1,8 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#dfdfdf"
-    tools:context="com.example.app.CurrentEntryActivity"
-    tools:ignore="MergeRootFrame" />
+    android:id="@+id/container">
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_header"
+        android:name="com.example.app.HeaderFragment"
+        tools:layout="@layout/fragment_header">
+    </fragment>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_current_times"
+        android:name="com.example.app.CurrentTimesFragment"
+        tools:layout="@layout/fragment_current_times">
+    </fragment>
+
+</LinearLayout>

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.app.CurrentEntryActivity$PlaceholderFragment">
+    tools:context="com.example.app.CurrentEntryActivity$PlaceholderFragment"
+    android:id="@+id/fragment_current_times">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,16 +15,24 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".70"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/current_entry_border_right">
 
-            <TextView
-                style="@style/textCenter.currentTimes.labels"
-                android:text="CURRENT"/>
-
-            <TextView
-                style="@style/textCenter.currentTimes.now"
-                android:text="1:50:37"
-                android:id="@+id/current_duration"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    style="@style/textCenter.currentTimes.labels"
+                    android:id="@+id/current_duration_label"
+                    android:text="CURRENT"/>
+                <TextView
+                    style="@style/textCenter.currentTimes.now"
+                    android:text="00:00:00"
+                    android:textSize="50sp"
+                    android:id="@+id/current_duration"/>
+            </LinearLayout>
 
         </LinearLayout>
         
@@ -38,14 +47,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/current_day_bg">
 
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
-                    android:text="02:15"/>
+                    android:id="@+id/current_time_day"
+                    android:paddingTop="10dp"
+                    android:text="04:35"/>
 
                 <TextView
                     style="@style/textCenter.currentTimes.labels"
+                    android:id="@+id/current_time_day_label"
+                    android:paddingBottom="10dp"
                     android:text="Today"/>
 
             </LinearLayout>
@@ -53,15 +67,20 @@
             <!-- week -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/current_week_bg">
 
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
-                    android:text="34:58"/>
+                    android:id="@+id/current_time_week"
+                    android:paddingTop="10dp"
+                    android:text="21:04"/>
 
                 <TextView
                     style="@style/textCenter.currentTimes.labels"
+                    android:id="@+id/current_time_week_label"
+                    android:paddingBottom="10dp"
                     android:text="Week"/>
 
             </LinearLayout>

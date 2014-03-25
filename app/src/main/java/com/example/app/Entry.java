@@ -16,7 +16,7 @@ public class Entry {
     public String description;
     public int external_id;
     public String logged_at;
-    public boolean active;
+    public boolean isActive;
     public JSONArray taskIds;
     public int project_id;
     public String updated_at;
@@ -45,7 +45,7 @@ public class Entry {
             if (!jsonObject.isNull("user_id"))
                 entry.user_id = jsonObject.getInt("user_id");
             if (!jsonObject.isNull("timer_active"))
-                entry.active = jsonObject.getBoolean("timer_active");
+                entry.isActive = jsonObject.getBoolean("timer_active");
             if (!jsonObject.isNull("updated_at"))
                 entry.updated_at = jsonObject.getString("updated_at");
             if (!jsonObject.isNull("task_ids"))
