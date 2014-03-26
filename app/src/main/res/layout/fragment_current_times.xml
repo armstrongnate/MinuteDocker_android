@@ -30,7 +30,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.now"
                     android:text="00:00:00"
-                    android:textSize="50dp"
+                    android:textSize="50sp"
                     android:id="@+id/current_duration"/>
             </LinearLayout>
 
@@ -53,13 +53,13 @@
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
                     android:id="@+id/current_time_day"
-                    android:paddingTop="10dp"
+                    android:paddingTop="3dp"
                     android:text="04:35"/>
 
                 <TextView
                     style="@style/textCenter.currentTimes.labels"
                     android:id="@+id/current_time_day_label"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:text="Today"/>
 
             </LinearLayout>
@@ -74,13 +74,13 @@
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
                     android:id="@+id/current_time_week"
-                    android:paddingTop="10dp"
+                    android:paddingTop="3dp"
                     android:text="21:04"/>
 
                 <TextView
                     style="@style/textCenter.currentTimes.labels"
                     android:id="@+id/current_time_week_label"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="3dp"
                     android:text="Week"/>
 
             </LinearLayout>
