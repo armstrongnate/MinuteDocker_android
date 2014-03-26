@@ -30,7 +30,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.now"
                     android:text="00:00:00"
-                    android:textSize="50sp"
+                    android:textSize="50dp"
                     android:id="@+id/current_duration"/>
             </LinearLayout>
 

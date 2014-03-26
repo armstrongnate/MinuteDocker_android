@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.app.CurrentEntryActivity$PlaceholderFragment"
+    android:id="@+id/fragment_entry_form">
+
+    <LinearLayout
+        android:focusable="true" android:focusableInTouchMode="true"
+        android:layout_width="0px" android:layout_height="0px"/>
+
+    <LinearLayout
+        style="@style/entryForm.wrapper.outer">
+
+        <TextView
+            style="@style/entryForm.header"/>
+
+        <LinearLayout
+            style="@style/entryForm.wrapper.inner">
+
+            <!-- contact -->
+            <TextView
+                style="@style/entryForm.formControl.label"
+                android:text="Contact"/>
+
+            <TextView
+                style="@style/entryForm.formControl.text_field"
+                android:text="\@profitboost"/>
+
+            <!-- project -->
+            <TextView
+                style="@style/entryForm.formControl.label"
+                android:text="Project"/>
+
+            <TextView
+                style="@style/entryForm.formControl.text_field"
+                android:text="#redesign"/>
+
+            <!-- tasks -->
+            <TextView
+                style="@style/entryForm.formControl.label"
+                android:text="Tasks"/>
+
+            <TextView
+                style="@style/entryForm.formControl.text_field"
+                android:text="#demo"/>
+
+            <!-- description -->
+            <TextView
+                style="@style/entryForm.formControl.label"
+                android:text="Description"/>
+
+            <EditText
+                style="@style/entryForm.formControl.text_field.text_area"
+                android:text="added library jobs to repair orders"/>
+
+            <Button
+                style="@style/entryForm.submitButton"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

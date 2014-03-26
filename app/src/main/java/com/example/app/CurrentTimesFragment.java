@@ -48,7 +48,8 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_current_times, null);
-        findViews(rootView);
+//        findViews(rootView);
+        currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
         setTodayTime();
         setWeekTime();
         return rootView;

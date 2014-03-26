@@ -23,4 +23,13 @@
         tools:layout="@layout/fragment_current_times">
     </fragment>
 
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/fragment_entry_form"
+        android:name="com.example.app.EntryFormFragment"
+        tools:layout="@layout/fragment_entry_form">
+    </fragment>
+
 </LinearLayout>

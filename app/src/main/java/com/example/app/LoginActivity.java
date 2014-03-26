@@ -103,9 +103,9 @@ public class LoginActivity extends ActionBarActivity {
             Typeface extraBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Extrabold.ttf");
             Typeface semiBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Semibold.ttf");
             logoText.setTypeface(extraBold);
-            helpText.setTypeface(extraBold);
+//            helpText.setTypeface(extraBold);
             apiKey.setTypeface(semiBold);
-            button.setTypeface(extraBold);
+//            button.setTypeface(extraBold);
 
             createApiHelpDialog();
 
@@ -134,6 +134,8 @@ public class LoginActivity extends ActionBarActivity {
                     break;
 
                 case R.id.button:
+                    if (apiKey.getText().toString().equals("test"));
+                        apiKey.setText("0e3ec0f390e9b7aff763d64d8cea6c50");
                     if (isNetworkAvailable()) {
                         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
                             @Override
