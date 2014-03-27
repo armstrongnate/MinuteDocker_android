@@ -81,7 +81,6 @@
 
                 <style name="entryForm.formControl.text_field.text_area">
                     <item name="android:layout_height">100dp</item>
-                    <item name="android:padding">8dp</item>
                     <item name="android:gravity">top</item>
                 </style>
 

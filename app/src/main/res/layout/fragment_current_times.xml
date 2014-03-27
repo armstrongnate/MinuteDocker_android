@@ -26,6 +26,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.labels"
                     android:id="@+id/current_duration_label"
+                    android:textStyle="bold"
                     android:text="CURRENT"/>
                 <TextView
                     style="@style/textCenter.currentTimes.now"
@@ -53,7 +54,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
                     android:id="@+id/current_time_day"
-                    android:paddingTop="3dp"
+                    android:paddingTop="1dp"
                     android:text="04:35"/>
 
                 <TextView

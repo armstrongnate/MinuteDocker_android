@@ -103,9 +103,9 @@ public class LoginActivity extends ActionBarActivity {
             Typeface extraBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Extrabold.ttf");
             Typeface semiBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Semibold.ttf");
             logoText.setTypeface(extraBold);
-//            helpText.setTypeface(extraBold);
+            helpText.setTypeface(extraBold);
             apiKey.setTypeface(semiBold);
-//            button.setTypeface(extraBold);
+            button.setTypeface(extraBold);
 
             createApiHelpDialog();
 

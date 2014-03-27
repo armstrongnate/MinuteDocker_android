@@ -48,7 +48,6 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_current_times, null);
-//        findViews(rootView);
         currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
         setTodayTime();
         setWeekTime();
@@ -65,11 +64,10 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
         setCurrentEntry();
-//        Toast.makeText(getActivity().getApplicationContext(), "in onResume",
-//                Toast.LENGTH_LONG).show();
     }
 
-    private void setCurrentEntry() {
+    public void setCurrentEntry() {
+        timerHandler.removeCallbacks(timerRunnable);
         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
             @Override
             public void onTaskComplete(String result) {
@@ -96,22 +94,5 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
 
     private void setWeekTime() {
 
-    }
-
-    private void findViews(View rootView) {
-        Typeface semiBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Semibold.ttf");
-        Typeface regular = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Regular.ttf");
-        currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
-        currentDuration.setTypeface(semiBold);
-        TextView currentDurationLabel = (TextView) rootView.findViewById(R.id.current_duration_label);
-        currentDurationLabel.setTypeface(semiBold);
-        TextView dayLabel = (TextView) rootView.findViewById(R.id.current_time_day_label);
-        dayLabel.setTypeface(semiBold);
-        TextView weekLabel = (TextView) rootView.findViewById(R.id.current_time_week_label);
-        weekLabel.setTypeface(semiBold);
-        TextView dayDuration = (TextView) rootView.findViewById(R.id.current_time_day);
-        dayDuration.setTypeface(regular);
-        TextView weekDuration = (TextView) rootView.findViewById(R.id.current_time_week);
-        weekDuration.setTypeface(regular);
     }
 }

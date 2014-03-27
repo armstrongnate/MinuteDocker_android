@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class CurrentEntryActivity extends ActionBarActivity {
+public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,13 @@ public class CurrentEntryActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        CurrentTimesFragment currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
+        currentTimesFragment.setCurrentEntry();
     }
 
     /**

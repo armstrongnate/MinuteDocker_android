@@ -6,15 +6,21 @@
     android:id="@+id/fragment_header">
 
     <TextView
+        android:padding="10dp"
+        android:background="@color/md_green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textSize="20sp"
         android:textColor="@color/md_dark_green"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:background="@color/md_green"
         android:id="@+id/header_app_name"/>
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:src="@drawable/header_refresh"
+        android:layout_alignParentRight="true"
+        android:id="@+id/header_refresh"/>
 
 </RelativeLayout>
