@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -26,12 +27,14 @@ public class EntryFormFragment extends Fragment {
     protected Entry currentEntry;
     protected Contact currentContact;
     protected Project currentProject;
+    protected ArrayList<Task> currentTasks;
     protected TextView contact;
     protected TextView project;
-    protected TextView tasks;
+    protected TextView task;
     protected TextView description;
     protected ArrayList<Contact> contacts;
     protected ArrayList<Project> projects;
+    protected ArrayList<Task> tasks;
 
     public EntryFormFragment() {
     }
@@ -43,7 +46,7 @@ public class EntryFormFragment extends Fragment {
 
         contact = (TextView) rootView.findViewById(R.id.entry_form_contact);
         project = (TextView) rootView.findViewById(R.id.entry_form_project);
-        tasks = (TextView) rootView.findViewById(R.id.entry_form_tasks);
+        task = (TextView) rootView.findViewById(R.id.entry_form_tasks);
         description = (TextView) rootView.findViewById(R.id.entry_form_description);
 
         return rootView;
@@ -54,6 +57,7 @@ public class EntryFormFragment extends Fragment {
         description.setText(entry.description);
         getCurrentContact();
         getCurrentProject();
+        getCurrentTasks();
     }
 
     public void getCurrentContact() {
@@ -118,5 +122,49 @@ public class EntryFormFragment extends Fragment {
         apiTask.execute(MinuteDockr.getInstance(getActivity()).getProjectsUrl());
     }
 
+    public void getCurrentTasks() {
+        if (currentEntry.taskIds.length < 1) {
+            task.setText("");
+            return;
+        }
+        ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+            @Override
+            public void onTaskComplete(String result) {
+                try {
+                    tasks = new ArrayList<Task>();
+                    currentTasks = new ArrayList<Task>();
+                    JSONArray jsonTasks = new JSONArray(result);
+                    for (int i=0; i<jsonTasks.length(); i++) {
+                        Task t = Task.fromJSONObject(jsonTasks.getJSONObject(i));
+                        tasks.add(t);
+                        if (entryHasTask(currentEntry, t)) {
+                            currentTasks.add(t);
+                        }
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    String delim = "";
+                    for (int i=0; i<currentTasks.size(); i++) {
+                        sb.append(delim).append(String.format("#%s", currentTasks.get(i).shortCode));
+                        delim = ", ";
+                    }
+                    task.setText(sb.toString());
+                }
+                catch (JSONException e) {
+                    Log.e(TAG, "JSONException caught: ", e);
+                }
+                catch (NullPointerException e) {
+                    Log.e(TAG, "Null pointer exception caught: ", e);
+                }
+            }
+        });
+        apiTask.execute(MinuteDockr.getInstance(getActivity()).getTasksUrl());
+    }
 
+    private boolean entryHasTask(Entry entry, Task task) {
+        for (int i=0; i<entry.taskIds.length; i++) {
+            if (entry.taskIds[i] == task.externalId)
+                return true;
+        }
+        return false;
+    }
 }

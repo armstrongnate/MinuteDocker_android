@@ -17,7 +17,7 @@ public class Entry {
     public int externalId;
     public String loggedAt;
     public boolean isActive;
-    public JSONArray taskIds;
+    public int [] taskIds;
     public int projectId;
     public String updatedAt;
     public int userId;
@@ -28,14 +28,14 @@ public class Entry {
     public static Entry fromJSONObject(JSONObject jsonObject) {
         Entry entry = new Entry();
         try {
+            entry.accountId = -1;
+            entry.contactId = -1;
+            entry.projectId = -1;
+            entry.taskIds = new int[0];
             if (!jsonObject.isNull("account_id"))
                 entry.accountId = jsonObject.getInt("account_id");
-            else
-                entry.accountId = -1;
             if (!jsonObject.isNull("contact_id"))
                 entry.contactId = jsonObject.getInt("contact_id");
-            else
-                entry.contactId = -1;
             if (!jsonObject.isNull("description"))
                 entry.description = jsonObject.getString("description");
             if (!jsonObject.isNull("duration"))
@@ -46,16 +46,19 @@ public class Entry {
                 entry.loggedAt = jsonObject.getString("logged_at");
             if (!jsonObject.isNull("project_id"))
                 entry.projectId = jsonObject.getInt("project_id");
-            else
-                entry.projectId = -1;
             if (!jsonObject.isNull("user_id"))
                 entry.userId = jsonObject.getInt("user_id");
             if (!jsonObject.isNull("timer_active"))
                 entry.isActive = jsonObject.getBoolean("timer_active");
             if (!jsonObject.isNull("updated_at"))
                 entry.updatedAt = jsonObject.getString("updated_at");
-            if (!jsonObject.isNull("task_ids"))
-                entry.taskIds = jsonObject.getJSONArray("task_ids");
+            if (!jsonObject.isNull("task_ids")) {
+                JSONArray jsonTaskIds = jsonObject.getJSONArray("task_ids");
+                entry.taskIds = new int[jsonTaskIds.length()];
+                for (int i=0; i<jsonTaskIds.length(); i++) {
+                    entry.taskIds[i] = jsonTaskIds.getInt(i);
+                }
+            }
         }
         catch (Exception e) {
             Log.e(TAG, "Exception caught: ", e);

@@ -34,6 +34,7 @@ public class MinuteDockr {
     public static String currentAccountPath = "accounts/current.json";
     public static String contactsPath = "contacts.json";
     public static String projectsPath = "projects.json";
+    public static String tasksPath = "tasks.json";
 
     private static MinuteDockr instance = null;
     public SharedPreferences sharedPreferences;
@@ -69,6 +70,10 @@ public class MinuteDockr {
 
     public String getProjectsUrl() {
         return String.format("%s%s?api_key=%s", baseUrl, projectsPath, getCurrentApiKey());
+    }
+
+    public String getTasksUrl() {
+        return String.format("%s%s?api_key=%s", baseUrl, tasksPath, getCurrentApiKey());
     }
 
     public String getCurrentApiKey() {
