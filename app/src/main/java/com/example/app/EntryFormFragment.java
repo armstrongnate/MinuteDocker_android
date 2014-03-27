@@ -57,6 +57,10 @@ public class EntryFormFragment extends Fragment {
     }
 
     public void getCurrentContact() {
+        if (currentEntry.contactId < 0) {
+            contact.setText("");
+            return;
+        }
         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
             @Override
             public void onTaskComplete(String result) {
@@ -84,6 +88,10 @@ public class EntryFormFragment extends Fragment {
     }
 
     public void getCurrentProject() {
+        if (currentEntry.projectId < 0) {
+            project.setText("");
+            return;
+        }
         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
             @Override
             public void onTaskComplete(String result) {

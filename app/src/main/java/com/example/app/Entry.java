@@ -30,8 +30,12 @@ public class Entry {
         try {
             if (!jsonObject.isNull("account_id"))
                 entry.accountId = jsonObject.getInt("account_id");
+            else
+                entry.accountId = -1;
             if (!jsonObject.isNull("contact_id"))
                 entry.contactId = jsonObject.getInt("contact_id");
+            else
+                entry.contactId = -1;
             if (!jsonObject.isNull("description"))
                 entry.description = jsonObject.getString("description");
             if (!jsonObject.isNull("duration"))
@@ -42,6 +46,8 @@ public class Entry {
                 entry.loggedAt = jsonObject.getString("logged_at");
             if (!jsonObject.isNull("project_id"))
                 entry.projectId = jsonObject.getInt("project_id");
+            else
+                entry.projectId = -1;
             if (!jsonObject.isNull("user_id"))
                 entry.userId = jsonObject.getInt("user_id");
             if (!jsonObject.isNull("timer_active"))
