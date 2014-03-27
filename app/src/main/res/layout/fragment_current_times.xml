@@ -27,6 +27,7 @@
                     style="@style/textCenter.currentTimes.labels"
                     android:id="@+id/current_duration_label"
                     android:textStyle="bold"
+                    android:textSize="18sp"
                     android:text="CURRENT"/>
                 <TextView
                     style="@style/textCenter.currentTimes.now"

@@ -42,8 +42,8 @@
 
         <style name="entryForm.wrapper.outer">
             <item name="android:background">@android:color/transparent</item>
-            <item name="android:layout_marginLeft">30dp</item>
-            <item name="android:layout_marginRight">30dp</item>
+            <item name="android:layout_marginLeft">15dp</item>
+            <item name="android:layout_marginRight">15dp</item>
         </style>
 
         <style name="entryForm.wrapper.inner">
@@ -75,12 +75,12 @@
                 <item name="android:padding">8dp</item>
                 <item name="android:textColor">@color/md_emphasis</item>
                 <item name="android:textSize">20sp</item>
-                <item name="android:layout_marginBottom">20dp</item>
+                <item name="android:layout_marginBottom">15dp</item>
                 <item name="android:textStyle">bold</item>
             </style>
 
                 <style name="entryForm.formControl.text_field.text_area">
-                    <item name="android:layout_height">100dp</item>
+                    <item name="android:layout_height">75dp</item>
                     <item name="android:gravity">top</item>
                 </style>
 

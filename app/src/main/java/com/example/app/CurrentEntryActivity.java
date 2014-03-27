@@ -32,8 +32,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_current_entry);
 
-        getCurrentEntry();
-
         // handle to fragments
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
