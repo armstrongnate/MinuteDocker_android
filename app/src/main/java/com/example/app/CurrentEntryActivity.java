@@ -24,6 +24,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     public static final String TAG = CurrentEntryActivity.class.getSimpleName();
     protected Entry currentEntry;
     protected CurrentTimesFragment currentTimesFragment;
+    protected EntryFormFragment entryFormFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         // handle to fragments
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
+        entryFormFragment = (EntryFormFragment) fragmentManager.findFragmentById(R.id.fragment_entry_form);
     }
 
 
@@ -80,6 +82,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
                     JSONObject jsonEntry = new JSONObject(result);
                     currentEntry = Entry.fromJSONObject(jsonEntry);
                     currentTimesFragment.setCurrentEntry(currentEntry);
+                    entryFormFragment.setCurrentEntry(currentEntry);
                 }
                 catch (JSONException e) {
                     Log.e(TAG, "JSONException caught: ", e);

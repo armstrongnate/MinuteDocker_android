@@ -25,6 +25,7 @@
 
             <TextView
                 style="@style/entryForm.formControl.text_field"
+                android:id="@+id/entry_form_contact"
                 android:text="\@profitboost"/>
 
             <!-- project -->
@@ -34,6 +35,7 @@
 
             <TextView
                 style="@style/entryForm.formControl.text_field"
+                android:id="@+id/entry_form_project"
                 android:text="#redesign"/>
 
             <!-- tasks -->
@@ -43,6 +45,7 @@
 
             <TextView
                 style="@style/entryForm.formControl.text_field"
+                android:id="@+id/entry_form_tasks"
                 android:text="#demo"/>
 
             <!-- description -->
@@ -52,6 +55,7 @@
 
             <EditText
                 style="@style/entryForm.formControl.text_field.text_area"
+                android:id="@+id/entry_form_description"
                 android:text="added library jobs to repair orders"/>
 
             <Button
