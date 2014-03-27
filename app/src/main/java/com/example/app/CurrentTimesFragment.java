@@ -60,32 +60,11 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
         timerHandler.removeCallbacks(timerRunnable);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setCurrentEntry();
-    }
-
-    public void setCurrentEntry() {
+    public void setCurrentEntry(Entry entry) {
         timerHandler.removeCallbacks(timerRunnable);
-        ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
-            @Override
-            public void onTaskComplete(String result) {
-                try {
-                    JSONObject jsonEntry = new JSONObject(result);
-                    currentEntry = Entry.fromJSONObject(jsonEntry);
-                    currentDurationSeconds = currentEntry.duration;
-                    timerHandler.postDelayed(timerRunnable, 0);
-                }
-                catch (JSONException e) {
-                    Log.e(TAG, "JSONException caught: ", e);
-                }
-                catch (NullPointerException e) {
-                    Log.e(TAG, "Null pointer exception caught: ", e);
-                }
-            }
-        });
-        apiTask.execute(MinuteDockr.getInstance(getActivity()).getCurrentEntryUrl());
+        currentEntry = entry;
+        currentDurationSeconds = currentEntry.duration;
+        timerHandler.postDelayed(timerRunnable, 0);
     }
 
     private void setTodayTime() {

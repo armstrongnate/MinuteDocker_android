@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,13 +17,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity {
+    public static final String TAG = CurrentEntryActivity.class.getSimpleName();
+    protected Entry currentEntry;
+    protected CurrentTimesFragment currentTimesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_current_entry);
+
+        getCurrentEntry();
+
+        // handle to fragments
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
     }
 
 
@@ -47,10 +60,36 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getCurrentEntry();
+    }
+
+    @Override
     public void onRefresh() {
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        CurrentTimesFragment currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
-        currentTimesFragment.setCurrentEntry();
+        getCurrentEntry();
+        Toast.makeText(getApplicationContext(), "Refreshed!",
+                Toast.LENGTH_LONG).show();
+    }
+
+    public void getCurrentEntry() {
+        ApiTask apiTask = new ApiTask(this, new AsyncTaskCompleteListener<String>() {
+            @Override
+            public void onTaskComplete(String result) {
+                try {
+                    JSONObject jsonEntry = new JSONObject(result);
+                    currentEntry = Entry.fromJSONObject(jsonEntry);
+                    currentTimesFragment.setCurrentEntry(currentEntry);
+                }
+                catch (JSONException e) {
+                    Log.e(TAG, "JSONException caught: ", e);
+                }
+                catch (NullPointerException e) {
+                    Log.e(TAG, "Null pointer exception caught: ", e);
+                }
+            }
+        });
+        apiTask.execute(MinuteDockr.getInstance(this).getCurrentEntryUrl());
     }
 
     /**
