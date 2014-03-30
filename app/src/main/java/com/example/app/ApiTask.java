@@ -4,6 +4,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,13 +29,51 @@ interface AsyncTaskCompleteListener<T> {
 }
 
 public class ApiTask extends AsyncTask<String, Void, String> {
-    private AsyncTaskCompleteListener<String> callback;
-    private Context context;
-    private static final String TAG = "ApiTask";
+    protected AsyncTaskCompleteListener<String> callback;
+    protected Context context;
+    protected static final String TAG = "ApiTask";
+
+    public ApiTask() {
+    }
 
     public ApiTask(Context context, AsyncTaskCompleteListener<String> cb) {
         this.context = context;
         this.callback = cb;
+    }
+
+    public static String POST(String url, JSONObject jsonObject){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(url);
+
+            if (jsonObject != null) {
+                String json = "";
+                json = jsonObject.toString();
+                StringEntity se = new StringEntity(json);
+
+                httpPost.setEntity(se);
+            }
+
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if(inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+            }
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
     }
 
     @Override
@@ -64,5 +111,17 @@ public class ApiTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         callback.onTaskComplete(result);
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
     }
 }

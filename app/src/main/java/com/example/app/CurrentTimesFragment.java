@@ -49,6 +49,19 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_current_times, null);
         currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
+        currentDuration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentEntry.toggleActive(getActivity(), new AsyncTaskCompleteListener<String>() {
+                    @Override
+                    public void onTaskComplete(String result) {
+                        String flag = currentEntry.isActive ? "Resuming" : "Paused!";
+                        Toast.makeText(getActivity(), flag,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
         setTodayTime();
         setWeekTime();
         return rootView;

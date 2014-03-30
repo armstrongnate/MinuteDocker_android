@@ -1,14 +1,30 @@
 package com.example.app;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.InputStream;
 
 /**
  * Created by nate on 3/23/14.
  */
+
 public class Entry {
+
+    protected enum EntryApiAction {
+        START_ACTION, PAUSE_ACTION
+    }
+
     public static String TAG = "Entry";
     public int duration; // in seconds
     public int accountId;
@@ -65,5 +81,54 @@ public class Entry {
         }
 
         return entry;
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.accumulate("account_id", accountId);
+            jsonObject.accumulate("contact_id", contactId);
+            jsonObject.accumulate("description", description);
+            jsonObject.accumulate("duration", duration);
+            jsonObject.accumulate("logged_at", loggedAt);
+            jsonObject.accumulate("project_id", projectId);
+            jsonObject.accumulate("user_id", userId);
+            jsonObject.accumulate("timer_active", isActive);
+            jsonObject.accumulate("task_ids", taskIds);
+        }
+        catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return jsonObject;
+    }
+
+    public void toggleActive(Context context, AsyncTaskCompleteListener<String> cb) {
+        isActive = !isActive;
+        MinuteDockr dockr = MinuteDockr.getInstance(context);
+        if (isActive) {
+            new HttpAsyncTask(context, cb, EntryApiAction.START_ACTION)
+                    .execute(String.format("%sentries/current/start.json?api_key=%s", dockr.baseUrl, dockr.getCurrentApiKey()));
+        }
+        else {
+            new HttpAsyncTask(context, cb, EntryApiAction.PAUSE_ACTION)
+                    .execute(String.format("%sentries/current/pause.json?api_key=%s", dockr.baseUrl, dockr.getCurrentApiKey()));
+        }
+    }
+
+    private class HttpAsyncTask extends ApiTask {
+
+        public HttpAsyncTask(Context context, AsyncTaskCompleteListener<String> cb, EntryApiAction action) {
+            super(context, cb);
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            return ApiTask.POST(urls[0], null);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            callback.onTaskComplete(result);
+        }
     }
 }
