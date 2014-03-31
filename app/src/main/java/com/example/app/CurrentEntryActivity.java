@@ -20,7 +20,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity {
+public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener {
     public static final String TAG = CurrentEntryActivity.class.getSimpleName();
     protected Entry currentEntry;
     protected CurrentTimesFragment currentTimesFragment;
@@ -68,8 +68,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     @Override
     public void onRefresh() {
         getCurrentEntry();
-        Toast.makeText(getApplicationContext(), "Refreshed!",
-                Toast.LENGTH_LONG).show();
     }
 
     public void getCurrentEntry() {
@@ -81,6 +79,8 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
                     currentEntry = Entry.fromJSONObject(jsonEntry);
                     currentTimesFragment.setCurrentEntry(currentEntry);
                     entryFormFragment.setCurrentEntry(currentEntry);
+                    Toast.makeText(getApplicationContext(), "Refreshed!",
+                            Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e) {
                     Log.e(TAG, "JSONException caught: ", e);
@@ -107,6 +107,11 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
             View rootView = inflater.inflate(R.layout.fragment_current_entry, container, false);
             return rootView;
         }
+    }
+
+    @Override
+    public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
+        currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
     }
 
 }
