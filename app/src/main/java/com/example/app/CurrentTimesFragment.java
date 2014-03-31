@@ -107,8 +107,6 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
         @Override
         public void onLongPress(MotionEvent event) {
             showDurationDialog();
-            Toast.makeText(getActivity(), "Long press!",
-                    Toast.LENGTH_LONG).show();
         }
 
         @Override
