@@ -41,10 +41,12 @@ public class DurationDialogFragment extends DialogFragment {
         hoursPicker.setMaxValue(100);
         hoursPicker.setMinValue(0);
         hoursPicker.setValue(hours);
+        hoursPicker.setFormatter(new TwoDigitFormatter());
         minutesPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         minutesPicker.setMaxValue(60);
         minutesPicker.setMinValue(0);
         minutesPicker.setValue(minutes);
+        minutesPicker.setFormatter(new TwoDigitFormatter());
         builder.setView(durationDialogFragment);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -75,5 +77,11 @@ public class DurationDialogFragment extends DialogFragment {
     public void setDuration(int hours, int minutes) {
         this.hours = hours;
         this.minutes = minutes;
+    }
+
+    public class TwoDigitFormatter implements NumberPicker.Formatter {
+        public String format(int value) {
+            return String.format("%02d", value);
+        }
     }
 }

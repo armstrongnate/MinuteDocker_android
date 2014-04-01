@@ -41,7 +41,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
         this.callback = cb;
     }
 
-    public static String POST(String url, JSONObject jsonObject){
+    public static String post(String url, JSONObject jsonObject){
         InputStream inputStream = null;
         String result = "";
         try {
@@ -70,6 +70,39 @@ public class ApiTask extends AsyncTask<String, Void, String> {
                 result = "Did not work!";
 
         } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
+    }
+
+    public static String put(String url, JSONObject jsonObject){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPut httpPut = new HttpPut(url);
+
+            if (jsonObject != null) {
+                StringEntity se = new StringEntity(jsonObject.toString());
+                httpPut.setEntity(se);
+            }
+
+            httpPut.setHeader("Accept", "application/json");
+            httpPut.setHeader("Content-type", "application/json");
+
+            HttpResponse httpResponse = httpclient.execute(httpPut);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+            }
+            else
+                result = "Did not work!";
+
+        }
+        catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 

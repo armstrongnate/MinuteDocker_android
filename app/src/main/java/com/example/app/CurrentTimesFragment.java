@@ -133,8 +133,20 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
 
     public void setDuration(int hours, int minutes, int seconds) {
         currentDurationSeconds = (hours * 3600) + (minutes * 60) + seconds;
+        currentEntry.duration = currentDurationSeconds;
+        updateCurrentEntry();
         timerHandler.removeCallbacks(timerRunnable);
         timerHandler.postDelayed(timerRunnable, 0);
+    }
+
+    public void updateCurrentEntry() {
+        currentEntry.update(getActivity(), new AsyncTaskCompleteListener<String>() {
+            @Override
+            public void onTaskComplete(String result) {
+                Toast.makeText(getActivity(), "Updated!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

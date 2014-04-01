@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Created by nate on 3/23/14.
@@ -22,7 +23,7 @@ import java.io.InputStream;
 public class Entry {
 
     protected enum EntryApiAction {
-        START_ACTION, PAUSE_ACTION
+        START_ACTION, PAUSE_ACTION, UPDATE_ACTION
     }
 
     public static String TAG = "Entry";
@@ -94,13 +95,28 @@ public class Entry {
             jsonObject.accumulate("project_id", projectId);
             jsonObject.accumulate("user_id", userId);
             jsonObject.accumulate("timer_active", isActive);
-            jsonObject.accumulate("task_ids", taskIds);
+            JSONArray jsonTaskIds = new JSONArray();
+            for (int i=0; i<taskIds.length; i++) {
+                jsonTaskIds.put(taskIds[i]);
+            }
+            jsonObject.accumulate("task_ids", jsonTaskIds);
         }
         catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 
         return jsonObject;
+    }
+
+    public JSONObject toParams() {
+        JSONObject params = new JSONObject();
+        try {
+            params.accumulate("entry", toJSONObject());
+        }
+        catch (Exception e) {
+            Log.d("InputString", e.getLocalizedMessage());
+        }
+        return params;
     }
 
     public void toggleActive(Context context, AsyncTaskCompleteListener<String> cb) {
@@ -116,15 +132,30 @@ public class Entry {
         }
     }
 
+    public void update(Context context, AsyncTaskCompleteListener<String> cb) {
+        MinuteDockr dockr = MinuteDockr.getInstance(context);
+        new HttpAsyncTask(context, cb, EntryApiAction.UPDATE_ACTION)
+                .execute(String.format("%sentries/%s.json?api_key=%s", dockr.baseUrl, externalId, dockr.getCurrentApiKey()));
+    }
+
     private class HttpAsyncTask extends ApiTask {
+        protected EntryApiAction action;
 
         public HttpAsyncTask(Context context, AsyncTaskCompleteListener<String> cb, EntryApiAction action) {
             super(context, cb);
+            this.action = action;
         }
 
         @Override
         protected String doInBackground(String... urls) {
-            return ApiTask.POST(urls[0], null);
+            JSONObject params = null;
+            if (action == EntryApiAction.UPDATE_ACTION) {
+                params = toJSONObject();
+                return ApiTask.put(urls[0], toParams());
+            }
+            else {
+                return ApiTask.post(urls[0], params);
+            }
         }
         @Override
         protected void onPostExecute(String result) {

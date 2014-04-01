@@ -26,6 +26,16 @@
 
         </NumberPicker>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text=":"
+            android:textSize="24dp"
+            android:gravity="center"
+            android:layout_marginRight="3dp"
+            android:layout_marginLeft="3dp"
+            android:textColor="#000"/>
+
         <NumberPicker
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
