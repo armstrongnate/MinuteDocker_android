@@ -87,8 +87,8 @@ public class Entry {
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.accumulate("account_id", accountId);
-            jsonObject.accumulate("contact_id", contactId);
+            jsonObject.accumulate("account_id", accountId > 0 ? accountId : null);
+            jsonObject.accumulate("contact_id", contactId > 0 ? contactId : null);
             jsonObject.accumulate("description", description);
             jsonObject.accumulate("duration", duration);
             jsonObject.accumulate("logged_at", loggedAt);

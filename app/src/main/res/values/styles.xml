@@ -94,4 +94,26 @@
             <item name="android:textStyle">bold</item>
         </style>
 
+    <style name="mdDialog">
+    </style>
+
+        <style name="mdDialog.title">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">60dp</item>
+            <item name="android:background">@color/md_button_bg</item>
+            <item name="android:layout_gravity">center_horizontal</item>
+            <item name="android:gravity">center</item>
+            <item name="android:textColor">@color/white_color</item>
+            <item name="android:textSize">24sp</item>
+        </style>
+
+        <style name="mdDialog.choices">
+        </style>
+
+            <style name="mdDialog.choices.textView">
+                <item name="android:textColor">#000</item>
+                <item name="android:textSize">21sp</item>
+                <item name="android:padding">6dp</item>
+            </style>
+
 </resources>

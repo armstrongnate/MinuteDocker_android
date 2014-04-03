@@ -36,7 +36,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     public static final String TAG = CurrentTimesFragment.class.getSimpleName();
     protected Entry currentEntry;
     protected TextView currentDuration;
-    protected TimePickerDialog currentTimePickerDialog;
+    protected DurationDialogFragment durationDialogFragment;
     private GestureDetectorCompat gDetect;
     int currentDurationSeconds;
 
@@ -63,6 +63,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_current_times, null);
         gDetect = new GestureDetectorCompat(getActivity(), new GestureListener());
+        durationDialogFragment = new DurationDialogFragment();
         currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
         currentDuration.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -124,11 +125,10 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     }
 
     private void showDurationDialog() {
-        DurationDialogFragment dialog = new DurationDialogFragment();
         int hours = (int)Math.floor(currentDurationSeconds / 3600);
         int minutes = (int)Math.floor(currentDurationSeconds / 60) % 60;
-        dialog.setDuration(hours, minutes);
-        dialog.show(getActivity().getSupportFragmentManager(), "DurationDialogFragment");
+        durationDialogFragment.setDuration(hours, minutes);
+        durationDialogFragment.show(getActivity().getSupportFragmentManager(), "DurationDialogFragment");
     }
 
     public void setDuration(int hours, int minutes, int seconds) {
