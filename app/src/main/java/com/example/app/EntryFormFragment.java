@@ -267,7 +267,9 @@ public class EntryFormFragment extends Fragment {
         if (contact != null) {
             currentEntry.contactId = contact.externalId;
             viewHolder.contact.setText(String.format("@%s", contact.shortCode));
-            if ((currentEntry.projectId < 0 && currentProject == null) || currentProject.contactId != contact.externalId) {
+            if (currentEntry.projectId > 0 && currentProject == null)
+                return;
+            if (currentProject == null || currentProject.contactId != contact.externalId) {
                 setCurrentProject(null);
             }
             else
