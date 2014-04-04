@@ -55,9 +55,6 @@
                 style="@style/entryForm.formControl.text_field.text_area"
                 android:id="@+id/entry_form_description"/>
 
-            <Button
-                style="@style/entryForm.submitButton"/>
-
         </LinearLayout>
 
     </LinearLayout>

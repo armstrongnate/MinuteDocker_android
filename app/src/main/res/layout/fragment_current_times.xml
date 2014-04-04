@@ -27,12 +27,12 @@
                     style="@style/textCenter.currentTimes.labels"
                     android:id="@+id/current_duration_label"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="CURRENT"/>
                 <TextView
                     style="@style/textCenter.currentTimes.now"
                     android:text="00:00:00"
-                    android:textSize="50sp"
+                    android:textSize="40sp"
                     android:layout_marginTop="-10dp"
                     android:id="@+id/current_duration"/>
             </LinearLayout>
