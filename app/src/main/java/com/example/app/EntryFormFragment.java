@@ -39,7 +39,7 @@ public class EntryFormFragment extends Fragment {
     protected ArrayList<Task> tasks;
     protected ContactsDialog contactsDialog;
     protected ProjectsDialog projectsDialog;
-    protected Dialog tasksDialog;
+    protected TasksDialog tasksDialog;
     private ViewHolder viewHolder;
 
     private class ViewHolder {
@@ -88,6 +88,18 @@ public class EntryFormFragment extends Fragment {
             }
         });
 
+        tasksDialog = new TasksDialog(new TasksDialogListener() {
+            @Override
+            public void onItemsConfirmedSelected(ArrayList<Task> tasks) {
+                ArrayList<Task> selectedTasks = new ArrayList<Task>();
+                for (Task task : tasks) {
+                    if (task.isChecked)
+                        selectedTasks.add(task);
+                }
+                setCurrentTasks(selectedTasks);
+            }
+        });
+
         viewHolder.contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +117,8 @@ public class EntryFormFragment extends Fragment {
         viewHolder.task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tasksDialog.show();
+                buildTasksDialog();
+                tasksDialog.show(getActivity().getFragmentManager(), "TasksDialog");
             }
         });
 
@@ -123,7 +136,6 @@ public class EntryFormFragment extends Fragment {
     public void getCurrentContact() {
         if (currentEntry.contactId < 0) {
             setCurrentContact(null);
-            return;
         }
         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
             @Override
@@ -183,8 +195,7 @@ public class EntryFormFragment extends Fragment {
 
     public void getCurrentTasks() {
         if (currentEntry.taskIds.length < 1) {
-            viewHolder.task.setText("");
-            return;
+            setCurrentTasks(null);
         }
         ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
             @Override
@@ -195,10 +206,11 @@ public class EntryFormFragment extends Fragment {
                     JSONArray jsonTasks = new JSONArray(result);
                     for (int i=0; i<jsonTasks.length(); i++) {
                         Task t = Task.fromJSONObject(jsonTasks.getJSONObject(i));
-                        tasks.add(t);
                         if (entryHasTask(currentEntry, t)) {
+                            t.isChecked = true;
                             currentTasks.add(t);
                         }
+                        tasks.add(t);
                     }
                     setCurrentTasks(currentTasks);
                 }
@@ -208,7 +220,6 @@ public class EntryFormFragment extends Fragment {
                 catch (NullPointerException e) {
                     Log.e(TAG, "Null pointer exception caught: ", e);
                 }
-                buildTasksDialog();
             }
         });
         apiTask.execute(MinuteDockr.getInstance(getActivity()).getTasksUrl());
@@ -236,20 +247,10 @@ public class EntryFormFragment extends Fragment {
     }
 
     private void buildTasksDialog() {
-        String shortCodes[] = new String[tasks.size()];
-        for (int i=0; i<tasks.size(); i++) {
-            if (tasks.get(i).shortCode != null)
-                shortCodes[i] = tasks.get(i).shortCode;
+        for (Task task : tasks) {
+            task.isChecked = entryHasTask(currentEntry, task);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Pick Tasks")
-                .setItems(shortCodes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                    }
-                });
-        tasksDialog = builder.create();
+        tasksDialog.tasks = tasks;
     }
 
     private void updateCurrentEntry() {
@@ -299,10 +300,12 @@ public class EntryFormFragment extends Fragment {
 
     public void setCurrentTasks(ArrayList<Task> tasks) {
         currentTasks = tasks;
+        currentEntry.taskIds = new int[currentTasks.size()];
         if (tasks != null) {
             StringBuilder sb = new StringBuilder();
             String delim = "";
             for (int i=0; i<currentTasks.size(); i++) {
+                currentEntry.taskIds[i] = currentTasks.get(i).externalId;
                 sb.append(delim).append(String.format("#%s", currentTasks.get(i).shortCode));
                 delim = ", ";
             }

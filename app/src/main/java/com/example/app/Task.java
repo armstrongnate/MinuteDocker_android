@@ -15,12 +15,14 @@ public class Task {
     public String shortCode;
     public String defaultRateInDollars;
     public Boolean hidden;
+    public Boolean isChecked;
 
     public Task() {
     }
 
     public static Task fromJSONObject(JSONObject json) {
         Task task = new Task();
+        task.isChecked = false;
         try {
             if (!json.isNull("id"))
                 task.externalId = json.getInt("id");
