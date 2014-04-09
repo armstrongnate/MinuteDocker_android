@@ -32,8 +32,10 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_current_entry);
+
+        android.app.ActionBar ab = getActionBar();
+        ab.setTitle(R.string.app_name);
 
         // handle to fragments
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
