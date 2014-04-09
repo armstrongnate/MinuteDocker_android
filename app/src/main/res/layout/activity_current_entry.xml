@@ -4,16 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#dfdfdf"
+    android:background="@color/md_green"
     android:id="@+id/container">
-
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_header"
-        android:name="com.example.app.HeaderFragment"
-        tools:layout="@layout/fragment_header">
-    </fragment>
 
     <fragment
         android:layout_width="match_parent"
@@ -26,17 +18,16 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/fragment_entry_form"
         android:name="com.example.app.EntryFormFragment"
-        tools:layout="@layout/fragment_entry_form"
-        android:layout_marginBottom="10dp">
+        tools:layout="@layout/fragment_entry_form">
     </fragment>
 
     <Button
         style="@style/entryForm.submitButton"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:id="@+id/log_button"/>
 
 </LinearLayout>

@@ -13,47 +13,34 @@
         style="@style/entryForm.wrapper.outer">
 
         <TextView
-            style="@style/entryForm.header"/>
+            style="@style/entryForm.header" />
 
         <LinearLayout
             style="@style/entryForm.wrapper.inner">
 
             <!-- contact -->
             <TextView
-                style="@style/entryForm.formControl.label"
-                android:text="Contact"/>
-
-            <TextView
                 style="@style/entryForm.formControl.text_field"
-                android:id="@+id/entry_form_contact"/>
+                android:id="@+id/entry_form_contact"
+                android:hint="Contact"/>
 
             <!-- project -->
             <TextView
-                style="@style/entryForm.formControl.label"
-                android:text="Project"/>
-
-            <TextView
                 style="@style/entryForm.formControl.text_field"
-                android:id="@+id/entry_form_project"/>
+                android:id="@+id/entry_form_project"
+                android:hint="Project"/>
 
             <!-- tasks -->
             <TextView
-                style="@style/entryForm.formControl.label"
-                android:text="Tasks"/>
-
-            <TextView
                 style="@style/entryForm.formControl.text_field"
                 android:id="@+id/entry_form_tasks"
-                android:text="#demo"/>
+                android:hint="Tasks"/>
 
             <!-- description -->
-            <TextView
-                style="@style/entryForm.formControl.label"
-                android:text="Description"/>
-
             <EditText
                 style="@style/entryForm.formControl.text_field.text_area"
-                android:id="@+id/entry_form_description"/>
+                android:id="@+id/entry_form_description"
+                android:hint="Description"/>
 
         </LinearLayout>
 
