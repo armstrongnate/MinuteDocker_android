@@ -8,10 +8,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +49,7 @@ public class EntryFormFragment extends Fragment {
         public TextView contact;
         public TextView project;
         public TextView task;
-        public TextView description;
+        public EditText description;
     }
 
     public EntryFormFragment() {
@@ -61,7 +64,25 @@ public class EntryFormFragment extends Fragment {
         viewHolder.contact = (TextView) rootView.findViewById(R.id.entry_form_contact);
         viewHolder.project = (TextView) rootView.findViewById(R.id.entry_form_project);
         viewHolder.task = (TextView) rootView.findViewById(R.id.entry_form_tasks);
-        viewHolder.description = (TextView) rootView.findViewById(R.id.entry_form_description);
+        viewHolder.description = (EditText) rootView.findViewById(R.id.entry_form_description);
+
+        viewHolder.description.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus)
+                    setCurrentDescription(viewHolder.description.getText().toString());
+            }
+        });
+        viewHolder.description.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    setCurrentDescription(viewHolder.description.getText().toString());
+                }
+                return false;
+            }
+        });
+
         contactsDialog = new ContactsDialog(new SingleChoiceDialogListener() {
             @Override
             public void onItemClick(Object choice) {
@@ -127,7 +148,7 @@ public class EntryFormFragment extends Fragment {
 
     public void setCurrentEntry(Entry entry) {
         currentEntry = entry;
-        viewHolder.description.setText(entry.description);
+        setCurrentDescription(entry.description);
         getCurrentContact();
         getCurrentProject();
         getCurrentTasks();
@@ -300,7 +321,8 @@ public class EntryFormFragment extends Fragment {
 
     public void setCurrentTasks(ArrayList<Task> tasks) {
         currentTasks = tasks;
-        currentEntry.taskIds = new int[currentTasks.size()];
+        if (currentTasks != null)
+            currentEntry.taskIds = new int[currentTasks.size()];
         if (tasks != null) {
             StringBuilder sb = new StringBuilder();
             String delim = "";
@@ -313,6 +335,12 @@ public class EntryFormFragment extends Fragment {
         }
         else
             viewHolder.task.setText("");
+        updateCurrentEntry();
+    }
+
+    public void setCurrentDescription(String description) {
+        viewHolder.description.setText(description);
+        currentEntry.description = description;
         updateCurrentEntry();
     }
 }
