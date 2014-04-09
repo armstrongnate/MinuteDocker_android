@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,22 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
         entryFormFragment = (EntryFormFragment) fragmentManager.findFragmentById(R.id.fragment_entry_form);
+
+        // log button
+        Button logButton = (Button) findViewById(R.id.log_button);
+        logButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentEntry = entryFormFragment.getCurrentEntry();
+                currentEntry.duration = currentTimesFragment.currentDurationSeconds;
+                currentEntry.log(CurrentEntryActivity.this, new AsyncTaskCompleteListener<String>() {
+                    @Override
+                    public void onTaskComplete(String result) {
+                        getCurrentEntry();
+                    }
+                });
+            }
+        });
     }
 
 

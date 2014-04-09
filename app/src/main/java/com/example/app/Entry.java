@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class Entry {
 
     protected enum EntryApiAction {
-        START_ACTION, PAUSE_ACTION, UPDATE_ACTION
+        START_ACTION, PAUSE_ACTION, UPDATE_ACTION, LOG_ACTION
     }
 
     public static String TAG = "Entry";
@@ -136,6 +136,12 @@ public class Entry {
         MinuteDockr dockr = MinuteDockr.getInstance(context);
         new HttpAsyncTask(context, cb, EntryApiAction.UPDATE_ACTION)
                 .execute(String.format("%sentries/%s.json?api_key=%s", dockr.baseUrl, externalId, dockr.getCurrentApiKey()));
+    }
+
+    public void log(Context context, AsyncTaskCompleteListener<String> cb) {
+        MinuteDockr dockr = MinuteDockr.getInstance(context);
+        new HttpAsyncTask(context, cb, EntryApiAction.LOG_ACTION)
+                .execute(String.format("%sentries/current/log.json?api_key=%s", dockr.baseUrl, dockr.getCurrentApiKey()));
     }
 
     private class HttpAsyncTask extends ApiTask {

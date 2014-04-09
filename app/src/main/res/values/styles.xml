@@ -81,15 +81,17 @@
                 <style name="entryForm.formControl.text_field.text_area">
                     <item name="android:layout_height">60dp</item>
                     <item name="android:gravity">top</item>
+                    <item name="android:imeOptions">actionDone</item>
+                    <item name="android:singleLine">true</item>
                 </style>
 
         <style name="entryForm.submitButton">
-            <item name="android:padding">10dp</item>
+            <item name="android:padding">6dp</item>
             <item name="android:background">@color/md_green</item>
             <item name="android:textColor">#ffffff</item>
             <item name="android:gravity">center</item>
             <item name="android:text">Log</item>
-            <item name="android:textSize">21sp</item>
+            <item name="android:textSize">20sp</item>
             <item name="android:textStyle">bold</item>
         </style>
 
