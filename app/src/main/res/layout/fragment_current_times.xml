@@ -56,7 +56,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
                     android:id="@+id/current_time_day"
-                    android:paddingTop="3dp"
+                    android:paddingTop="5dp"
                     android:text="04:35"/>
 
                 <TextView
@@ -78,7 +78,7 @@
                 <TextView
                     style="@style/textCenter.currentTimes.dayWeek"
                     android:id="@+id/current_time_week"
-                    android:paddingTop="3dp"
+                    android:paddingTop="4dp"
                     android:text="21:04"/>
 
                 <TextView
