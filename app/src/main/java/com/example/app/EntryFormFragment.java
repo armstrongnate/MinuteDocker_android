@@ -343,4 +343,9 @@ public class EntryFormFragment extends Fragment {
         currentEntry.description = description;
         updateCurrentEntry();
     }
+
+    public Entry getCurrentEntry() {
+        currentEntry.description = viewHolder.description.getText().toString();
+        return currentEntry;
+    }
 }
