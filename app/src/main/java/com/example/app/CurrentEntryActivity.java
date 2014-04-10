@@ -3,6 +3,7 @@ package com.example.app;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.os.RemoteException;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -15,24 +16,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.radiusnetworks.ibeacon.IBeacon;
+import com.radiusnetworks.ibeacon.IBeaconConsumer;
+import com.radiusnetworks.ibeacon.IBeaconManager;
+import com.radiusnetworks.ibeacon.MonitorNotifier;
+import com.radiusnetworks.ibeacon.RangeNotifier;
+import com.radiusnetworks.ibeacon.Region;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener {
+import java.util.Collection;
+
+public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener, IBeaconConsumer {
     public static final String TAG = CurrentEntryActivity.class.getSimpleName();
     protected Entry currentEntry;
     protected CurrentTimesFragment currentTimesFragment;
     protected EntryFormFragment entryFormFragment;
+    private IBeaconManager iBeaconManager = IBeaconManager.getInstanceForApplication(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_entry);
+        iBeaconManager.bind(this);
 
         android.app.ActionBar ab = getActionBar();
         ab.setTitle(R.string.app_name);
@@ -74,7 +88,12 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            View refresher = findViewById(R.id.action_refresh);
+            Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
+            rotation.setRepeatCount(10);
+            refresher.startAnimation(rotation);
+            getCurrentEntry();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -89,6 +108,12 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     @Override
     public void onRefresh() {
         getCurrentEntry();
+    }
+
+    @Override
+    public void onRefreshFinished() {
+        View refresher = findViewById(R.id.action_refresh);
+        refresher.clearAnimation();
     }
 
     public void getCurrentEntry() {
@@ -133,6 +158,45 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     @Override
     public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
         currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
+    }
+
+    public void changeBg() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                View container = findViewById(R.id.container);
+                container.setBackgroundColor(getResources().getColor(R.color.white_color));
+                Toast.makeText(CurrentEntryActivity.this, "Beacon Found!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // iBeacon
+
+    @Override
+    public void onIBeaconServiceConnect() {
+        iBeaconManager.setMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(Region region) {
+                Log.i(TAG, "I just saw an iBeacon for the first time!");
+                changeBg();
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                Log.i(TAG, "I no longer see an iBeacon");
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int state, Region region) {
+                Log.i(TAG, "I have just switched from seeing/not seeing iBeacons: "+state);
+            }
+        });
+
+        try {
+            iBeaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
+        } catch (RemoteException e) {   }
     }
 
 }

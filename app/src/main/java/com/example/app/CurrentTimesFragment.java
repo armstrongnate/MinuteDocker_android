@@ -124,6 +124,17 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    public void start() {
+        currentEntry.toggleActive(getActivity(), new AsyncTaskCompleteListener<String>() {
+            @Override
+            public void onTaskComplete(String result) {
+                String flag = currentEntry.isActive ? "Resuming" : "Paused!";
+                Toast.makeText(getActivity(), flag,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void showDurationDialog() {
         int hours = (int)Math.floor(currentDurationSeconds / 3600);
         int minutes = (int)Math.floor(currentDurationSeconds / 60) % 60;

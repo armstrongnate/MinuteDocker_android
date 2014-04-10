@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 interface RefreshActivity {
     public void onRefresh();
+    public void onRefreshFinished();
 }
 
 public class HeaderFragment extends Fragment {
