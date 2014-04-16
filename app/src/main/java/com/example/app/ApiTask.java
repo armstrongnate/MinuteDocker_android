@@ -25,136 +25,136 @@ import java.net.URL;
  * Created by nate on 3/23/14.
  */
 interface AsyncTaskCompleteListener<T> {
-    public void onTaskComplete(T result);
+  public void onTaskComplete(T result);
 }
 
 public class ApiTask extends AsyncTask<String, Void, String> {
-    protected AsyncTaskCompleteListener<String> callback;
-    protected Context context;
-    protected static final String TAG = "ApiTask";
+  protected AsyncTaskCompleteListener<String> callback;
+  protected Context context;
+  protected static final String TAG = "ApiTask";
 
-    public ApiTask() {
+  public ApiTask() {
+  }
+
+  public ApiTask(Context context, AsyncTaskCompleteListener<String> cb) {
+    this.context = context;
+    this.callback = cb;
+  }
+
+  public static String post(String url, JSONObject jsonObject){
+    InputStream inputStream = null;
+    String result = "";
+    try {
+      HttpClient httpclient = new DefaultHttpClient();
+      HttpPost httpPost = new HttpPost(url);
+
+      if (jsonObject != null) {
+        String json = "";
+        json = jsonObject.toString();
+        StringEntity se = new StringEntity(json);
+
+        httpPost.setEntity(se);
+      }
+
+      httpPost.setHeader("Accept", "application/json");
+      httpPost.setHeader("Content-type", "application/json");
+
+      HttpResponse httpResponse = httpclient.execute(httpPost);
+
+      inputStream = httpResponse.getEntity().getContent();
+
+      if (inputStream != null) {
+        result = convertInputStreamToString(inputStream);
+      }
+      else
+        result = "Did not work!";
+
+    } catch (Exception e) {
+      Log.d("InputStream", e.getLocalizedMessage());
     }
 
-    public ApiTask(Context context, AsyncTaskCompleteListener<String> cb) {
-        this.context = context;
-        this.callback = cb;
-    }
+    return result;
+  }
 
-    public static String post(String url, JSONObject jsonObject){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+  public static String put(String url, JSONObject jsonObject){
+    InputStream inputStream = null;
+    String result = "";
+    try {
+      HttpClient httpclient = new DefaultHttpClient();
+      HttpPut httpPut = new HttpPut(url);
 
-            if (jsonObject != null) {
-                String json = "";
-                json = jsonObject.toString();
-                StringEntity se = new StringEntity(json);
+      if (jsonObject != null) {
+        StringEntity se = new StringEntity(jsonObject.toString());
+        httpPut.setEntity(se);
+      }
 
-                httpPost.setEntity(se);
-            }
+      httpPut.setHeader("Accept", "application/json");
+      httpPut.setHeader("Content-type", "application/json");
 
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
+      HttpResponse httpResponse = httpclient.execute(httpPut);
 
-            HttpResponse httpResponse = httpclient.execute(httpPost);
+      inputStream = httpResponse.getEntity().getContent();
 
-            inputStream = httpResponse.getEntity().getContent();
-
-            if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-            }
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    public static String put(String url, JSONObject jsonObject){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPut httpPut = new HttpPut(url);
-
-            if (jsonObject != null) {
-                StringEntity se = new StringEntity(jsonObject.toString());
-                httpPut.setEntity(se);
-            }
-
-            httpPut.setHeader("Accept", "application/json");
-            httpPut.setHeader("Content-type", "application/json");
-
-            HttpResponse httpResponse = httpclient.execute(httpPut);
-
-            inputStream = httpResponse.getEntity().getContent();
-
-            if (inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-            }
-            else
-                result = "Did not work!";
-
-        }
-        catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    @Override
-    protected String doInBackground(String... strings) {
-        int responseCode;
-        String responseData = null;
-        try {
-            URL currentAccountUrl = new URL(strings[0]);
-            HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
-            connection.connect();
-
-            responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = connection.getInputStream();
-                Reader reader = new InputStreamReader(inputStream);
-                int contentLength = connection.getContentLength();
-                char[] charArray = new char[contentLength];
-                reader.read(charArray);
-                responseData = new String(charArray);
-            }
-        }
-        catch (MalformedURLException e) {
-            Log.e(TAG, "Exception caught: ", e);
-        }
-        catch (IOException e) {
-            Log.e(TAG, "Exception caught: ", e);
-        }
-        catch (Exception e) {
-            Log.e(TAG, "Exception caught: ", e);
-        }
-
-        return responseData;
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        callback.onTaskComplete(result);
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
+      if (inputStream != null) {
+        result = convertInputStreamToString(inputStream);
+      }
+      else
+        result = "Did not work!";
 
     }
+    catch (Exception e) {
+      Log.d("InputStream", e.getLocalizedMessage());
+    }
+
+    return result;
+  }
+
+  @Override
+  protected String doInBackground(String... strings) {
+    int responseCode;
+    String responseData = null;
+    try {
+      URL currentAccountUrl = new URL(strings[0]);
+      HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
+      connection.connect();
+
+      responseCode = connection.getResponseCode();
+      if (responseCode == HttpURLConnection.HTTP_OK) {
+        InputStream inputStream = connection.getInputStream();
+        Reader reader = new InputStreamReader(inputStream);
+        int contentLength = connection.getContentLength();
+        char[] charArray = new char[contentLength];
+        reader.read(charArray);
+        responseData = new String(charArray);
+      }
+    }
+    catch (MalformedURLException e) {
+      Log.e(TAG, "Exception caught: ", e);
+    }
+    catch (IOException e) {
+      Log.e(TAG, "Exception caught: ", e);
+    }
+    catch (Exception e) {
+      Log.e(TAG, "Exception caught: ", e);
+    }
+
+    return responseData;
+  }
+
+  @Override
+  protected void onPostExecute(String result) {
+    callback.onTaskComplete(result);
+  }
+
+  private static String convertInputStreamToString(InputStream inputStream) throws IOException{
+    BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+    String line = "";
+    String result = "";
+    while((line = bufferedReader.readLine()) != null)
+      result += line;
+
+    inputStream.close();
+    return result;
+
+  }
 }

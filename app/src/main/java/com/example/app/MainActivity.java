@@ -11,77 +11,77 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class MainActivity extends ActionBarActivity {
-    protected MinuteDockr app;
+  protected MinuteDockr app;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    app = MinuteDockr.getInstance(this);
+    int currentAccountId = app.sharedPreferences.getInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, -1);
+    if (currentAccountId != -1) {
+      navigateToCurrentEntry();
+    }
+    else {
+      navigateToLogin();
+    }
+
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction()
+        .add(R.id.container, new PlaceholderFragment())
+        .commit();
+    }
+  }
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_settings) {
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * A placeholder fragment containing a simple view.
+   */
+  public static class PlaceholderFragment extends Fragment {
+
+    public PlaceholderFragment() {
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        app = MinuteDockr.getInstance(this);
-        int currentAccountId = app.sharedPreferences.getInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, -1);
-        if (currentAccountId != -1) {
-            navigateToCurrentEntry();
-        }
-        else {
-            navigateToLogin();
-        }
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+      View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+      return rootView;
     }
+  }
 
+  private void navigateToLogin() {
+    Intent intent = new Intent(this, LoginActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    startActivity(intent);
+  }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-    }
-
-    private void navigateToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    private void navigateToCurrentEntry() {
-        Intent intent = new Intent(this, CurrentEntryActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+  private void navigateToCurrentEntry() {
+    Intent intent = new Intent(this, CurrentEntryActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    startActivity(intent);
+  }
 
 }

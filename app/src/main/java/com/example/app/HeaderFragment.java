@@ -12,37 +12,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 interface RefreshActivity {
-    public void onRefresh();
-    public void onRefreshFinished();
+  public void onRefresh();
+  public void onRefreshFinished();
 }
 
 public class HeaderFragment extends Fragment {
-    protected TextView appName;
+  protected TextView appName;
 
-    public HeaderFragment() {
-        // Required empty public constructor
-    }
+  public HeaderFragment() {
+    // Required empty public constructor
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_header, null);
-        appName = (TextView) rootView.findViewById(R.id.header_app_name);
-        Typeface extraBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Extrabold.ttf");
-        appName.setTypeface(extraBold);
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View rootView = inflater.inflate(R.layout.fragment_header, null);
+    appName = (TextView) rootView.findViewById(R.id.header_app_name);
+    Typeface extraBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Extrabold.ttf");
+    appName.setTypeface(extraBold);
 
-        ImageView refresh = (ImageView) rootView.findViewById(R.id.header_refresh);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RefreshActivity activity = (RefreshActivity) getActivity();
-                activity.onRefresh();
-            }
-        });
+    ImageView refresh = (ImageView) rootView.findViewById(R.id.header_refresh);
+    refresh.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        RefreshActivity activity = (RefreshActivity) getActivity();
+        activity.onRefresh();
+      }
+    });
 
-        return rootView;
-    }
+    return rootView;
+  }
 
 
 }

@@ -11,25 +11,25 @@ import java.util.ArrayList;
  * Created by nate on 4/2/14.
  */
 public class ProjectsDialog extends SingleChoiceDialog {
-    protected ArrayList<Project> projects;
+  protected ArrayList<Project> projects;
 
-    public ProjectsDialog(SingleChoiceDialogListener singleChoiceDialogListener) {
-        listener = singleChoiceDialogListener;
-    }
+  public ProjectsDialog(SingleChoiceDialogListener singleChoiceDialogListener) {
+    listener = singleChoiceDialogListener;
+  }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        ProjectsAdapter adapter = new ProjectsAdapter(getActivity(), R.layout.contact_list_item, projects);
-        choices.setAdapter(adapter);
-        choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Project project = i == projects.size() ? null : projects.get(i);
-                listener.onItemClick(project);
-            }
-        });
-        title.setText("Select Project");
-        return dialog;
-    }
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    ProjectsAdapter adapter = new ProjectsAdapter(getActivity(), R.layout.contact_list_item, projects);
+    choices.setAdapter(adapter);
+    choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Project project = i == projects.size() ? null : projects.get(i);
+        listener.onItemClick(project);
+      }
+    });
+    title.setText("Select Project");
+    return dialog;
+  }
 }

@@ -36,167 +36,167 @@ import org.json.JSONObject;
 import java.util.Collection;
 
 public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener, IBeaconConsumer {
-    public static final String TAG = CurrentEntryActivity.class.getSimpleName();
-    protected Entry currentEntry;
-    protected CurrentTimesFragment currentTimesFragment;
-    protected EntryFormFragment entryFormFragment;
-    private IBeaconManager iBeaconManager = IBeaconManager.getInstanceForApplication(this);
+  public static final String TAG = CurrentEntryActivity.class.getSimpleName();
+  protected Entry currentEntry;
+  protected CurrentTimesFragment currentTimesFragment;
+  protected EntryFormFragment entryFormFragment;
+  private IBeaconManager iBeaconManager = IBeaconManager.getInstanceForApplication(this);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current_entry);
-        iBeaconManager.bind(this);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_current_entry);
+    iBeaconManager.bind(this);
 
-        android.app.ActionBar ab = getActionBar();
-        ab.setTitle(R.string.app_name);
+    android.app.ActionBar ab = getActionBar();
+    ab.setTitle(R.string.app_name);
 
-        // handle to fragments
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
-        entryFormFragment = (EntryFormFragment) fragmentManager.findFragmentById(R.id.fragment_entry_form);
+    // handle to fragments
+    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+    currentTimesFragment = (CurrentTimesFragment) fragmentManager.findFragmentById(R.id.fragment_current_times);
+    entryFormFragment = (EntryFormFragment) fragmentManager.findFragmentById(R.id.fragment_entry_form);
 
-        // log button
-        Button logButton = (Button) findViewById(R.id.log_button);
-        logButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentEntry = entryFormFragment.getCurrentEntry();
-                currentEntry.duration = currentTimesFragment.currentDurationSeconds;
-                currentEntry.log(CurrentEntryActivity.this, new AsyncTaskCompleteListener<String>() {
-                    @Override
-                    public void onTaskComplete(String result) {
-                        getCurrentEntry();
-                    }
-                });
-            }
-        });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.current_entry, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            View refresher = findViewById(R.id.action_refresh);
-            Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
-            rotation.setRepeatCount(10);
-            refresher.startAnimation(rotation);
+    // log button
+    Button logButton = (Button) findViewById(R.id.log_button);
+    logButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        currentEntry = entryFormFragment.getCurrentEntry();
+        currentEntry.duration = currentTimesFragment.currentDurationSeconds;
+        currentEntry.log(CurrentEntryActivity.this, new AsyncTaskCompleteListener<String>() {
+          @Override
+          public void onTaskComplete(String result) {
             getCurrentEntry();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getCurrentEntry();
-    }
-
-    @Override
-    public void onRefresh() {
-        getCurrentEntry();
-    }
-
-    @Override
-    public void onRefreshFinished() {
-        View refresher = findViewById(R.id.action_refresh);
-        refresher.clearAnimation();
-    }
-
-    public void getCurrentEntry() {
-        ApiTask apiTask = new ApiTask(this, new AsyncTaskCompleteListener<String>() {
-            @Override
-            public void onTaskComplete(String result) {
-                try {
-                    JSONObject jsonEntry = new JSONObject(result);
-                    currentEntry = Entry.fromJSONObject(jsonEntry);
-                    currentTimesFragment.setCurrentEntry(currentEntry);
-                    entryFormFragment.setCurrentEntry(currentEntry);
-                    Toast.makeText(getApplicationContext(), "Refreshed!",
-                            Toast.LENGTH_LONG).show();
-                }
-                catch (JSONException e) {
-                    Log.e(TAG, "JSONException caught: ", e);
-                }
-                catch (NullPointerException e) {
-                    Log.e(TAG, "Null pointer exception caught: ", e);
-                }
-            }
+          }
         });
-        apiTask.execute(MinuteDockr.getInstance(this).getCurrentEntryUrl());
+      }
+    });
+  }
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.current_entry, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    if (id == R.id.action_refresh) {
+      View refresher = findViewById(R.id.action_refresh);
+      Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
+      rotation.setRepeatCount(10);
+      refresher.startAnimation(rotation);
+      getCurrentEntry();
+      return true;
     }
+    return super.onOptionsItemSelected(item);
+  }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+  @Override
+  public void onResume() {
+    super.onResume();
+    getCurrentEntry();
+  }
 
-        public PlaceholderFragment() {
-        }
+  @Override
+  public void onRefresh() {
+    getCurrentEntry();
+  }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_current_entry, container, false);
-            return rootView;
-        }
-    }
+  @Override
+  public void onRefreshFinished() {
+    View refresher = findViewById(R.id.action_refresh);
+    refresher.clearAnimation();
+  }
 
-    @Override
-    public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
-        currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
-    }
-
-    public void changeBg() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                View container = findViewById(R.id.container);
-                container.setBackgroundColor(getResources().getColor(R.color.white_color));
-                Toast.makeText(CurrentEntryActivity.this, "Beacon Found!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    // iBeacon
-
-    @Override
-    public void onIBeaconServiceConnect() {
-        iBeaconManager.setMonitorNotifier(new MonitorNotifier() {
-            @Override
-            public void didEnterRegion(Region region) {
-                Log.i(TAG, "I just saw an iBeacon for the first time!");
-                changeBg();
-            }
-
-            @Override
-            public void didExitRegion(Region region) {
-                Log.i(TAG, "I no longer see an iBeacon");
-            }
-
-            @Override
-            public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "I have just switched from seeing/not seeing iBeacons: "+state);
-            }
-        });
-
+  public void getCurrentEntry() {
+    ApiTask apiTask = new ApiTask(this, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
         try {
-            iBeaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
-        } catch (RemoteException e) {   }
+          JSONObject jsonEntry = new JSONObject(result);
+          currentEntry = Entry.fromJSONObject(jsonEntry);
+          currentTimesFragment.setCurrentEntry(currentEntry);
+          entryFormFragment.setCurrentEntry(currentEntry);
+          Toast.makeText(getApplicationContext(), "Refreshed!",
+            Toast.LENGTH_LONG).show();
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+      }
+    });
+    apiTask.execute(MinuteDockr.getInstance(this).getCurrentEntryUrl());
+  }
+
+  /**
+   * A placeholder fragment containing a simple view.
+   */
+  public static class PlaceholderFragment extends Fragment {
+
+    public PlaceholderFragment() {
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+      View rootView = inflater.inflate(R.layout.fragment_current_entry, container, false);
+      return rootView;
+    }
+  }
+
+  @Override
+  public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
+    currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
+  }
+
+  public void changeBg() {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        View container = findViewById(R.id.container);
+        container.setBackgroundColor(getResources().getColor(R.color.white_color));
+        Toast.makeText(CurrentEntryActivity.this, "Beacon Found!",
+          Toast.LENGTH_LONG).show();
+      }
+    });
+  }
+
+  // iBeacon
+
+  @Override
+  public void onIBeaconServiceConnect() {
+    iBeaconManager.setMonitorNotifier(new MonitorNotifier() {
+      @Override
+      public void didEnterRegion(Region region) {
+        Log.i(TAG, "I just saw an iBeacon for the first time!");
+        changeBg();
+      }
+
+      @Override
+      public void didExitRegion(Region region) {
+        Log.i(TAG, "I no longer see an iBeacon");
+      }
+
+      @Override
+      public void didDetermineStateForRegion(int state, Region region) {
+        Log.i(TAG, "I have just switched from seeing/not seeing iBeacons: "+state);
+      }
+    });
+
+    try {
+      iBeaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
+    } catch (RemoteException e) {   }
+  }
 
 }
