@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.example.app.MDNavigationFragment"
+             android:id="@+id/fragment_mdnavigation">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/mdNavigation">
+
+    <ImageView
+      style="@style/mdNavigation.icon"
+      android:src="@drawable/list_navigation_item"
+      android:id="@+id/entries"/>
+
+    <ImageView
+      style="@style/mdNavigation.icon"
+      android:src="@drawable/watch_navigation_item"
+      android:id="@+id/entry"/>
+
+    <ImageView
+      style="@style/mdNavigation.icon"
+      android:src="@drawable/settings_navigation_item"
+      android:id="@+id/settings"/>
+
+  </LinearLayout>
+
+</FrameLayout>

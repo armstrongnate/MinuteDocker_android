@@ -1,135 +1,146 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
-    
-    <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/header_bg</item>
-        <item name="android:displayOptions">showTitle</item>
-        <item name="displayOptions">showTitle</item>
-        <item name="android:icon">@android:color/transparent</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
-    </style>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="android:actionBarStyle">@style/MyActionBar</item>
+  </style>
 
-    <style name="MyActionBarTitleText"
-        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textStyle">bold</item>
-    </style>
+  <style name="MyActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
+    <item name="android:background">@drawable/header_bg</item>
+    <item name="android:displayOptions">showTitle</item>
+    <item name="displayOptions">showTitle</item>
+    <item name="android:icon">@android:color/transparent</item>
+    <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+  </style>
 
-    <style name="textCenter" parent="@android:style/TextAppearance.Small">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-    </style>
+  <style name="MyActionBarTitleText"
+         parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:textStyle">bold</item>
+  </style>
 
-    <style name="textCenter.currentTimes">
-    </style>
+  <style name="textCenter" parent="@android:style/TextAppearance.Small">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+  </style>
 
-        <style name="textCenter.currentTimes.dayWeek">
-            <item name="android:textColor">#4c4c4c</item>
-            <item name="android:textSize">16sp</item>
-        </style>
+  <style name="textCenter.currentTimes">
+  </style>
 
-        <style name="textCenter.currentTimes.labels">
-            <item name="android:textColor">#959595</item>
-        </style>
+  <style name="textCenter.currentTimes.dayWeek">
+    <item name="android:textColor">#4c4c4c</item>
+    <item name="android:textSize">16sp</item>
+  </style>
 
-        <style name="textCenter.currentTimes.now">
-            <item name="android:textColor">@color/md_green</item>
-        </style>
+  <style name="textCenter.currentTimes.labels">
+    <item name="android:textColor">#959595</item>
+  </style>
 
-    <style name="timeBox">
-        <item name="android:background">#f8f8f8</item>
-    </style>
+  <style name="textCenter.currentTimes.now">
+    <item name="android:textColor">@color/md_green</item>
+  </style>
 
-    <style name="entryForm">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+  <style name="timeBox">
+    <item name="android:background">#f8f8f8</item>
+  </style>
 
-        <style name="entryForm.wrapper">
-            <item name="android:orientation">vertical</item>
-        </style>
+  <style name="entryForm">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
 
-        <style name="entryForm.wrapper.outer">
-            <item name="android:background">@android:color/transparent</item>
-            <item name="android:layout_marginLeft">15dp</item>
-            <item name="android:layout_marginRight">15dp</item>
-        </style>
+  <style name="entryForm.wrapper">
+    <item name="android:orientation">vertical</item>
+  </style>
 
-        <style name="entryForm.wrapper.inner">
-            <item name="android:background">@android:color/transparent</item>
-            <item name="android:paddingTop">5dp</item>
-        </style>
+  <style name="entryForm.wrapper.outer">
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:layout_marginLeft">15dp</item>
+    <item name="android:layout_marginRight">15dp</item>
+  </style>
 
-        <style name="entryForm.header">
-            <item name="android:textColor">@color/md_dark_green</item>
-            <item name="android:textSize">17sp</item>
-            <item name="android:text">Current entry details:</item>
-            <item name="android:textStyle">bold</item>
-            <item name="android:layout_marginBottom">2dp</item>
-        </style>
+  <style name="entryForm.wrapper.inner">
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:paddingTop">5dp</item>
+  </style>
 
-        <style name="entryForm.formControl">
-            <item name="android:layout_marginLeft">10dp</item>
-            <item name="android:layout_marginRight">10dp</item>
-        </style>
+  <style name="entryForm.header">
+    <item name="android:textColor">@color/md_dark_green</item>
+    <item name="android:textSize">17sp</item>
+    <item name="android:text">Current entry details:</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:layout_marginBottom">2dp</item>
+  </style>
 
-            <style name="entryForm.formControl.label">
-                <item name="android:textColor">#2f490b</item>
-                <item name="android:textSize">16sp</item>
-                <item name="android:layout_marginBottom">2dp</item>
-            </style>
+  <style name="entryForm.formControl">
+    <item name="android:layout_marginLeft">10dp</item>
+    <item name="android:layout_marginRight">10dp</item>
+  </style>
 
-            <style name="entryForm.formControl.text_field">
-                <item name="android:background">@color/white_color</item>
-                <item name="android:padding">5dp</item>
-                <item name="android:textColor">@color/md_emphasis</item>
-                <item name="android:textSize">16sp</item>
-                <item name="android:layout_marginBottom">8dp</item>
-                <item name="android:textStyle">bold</item>
-                <item name="android:textColorHint">#bbbbbb</item>
-            </style>
+  <style name="entryForm.formControl.label">
+    <item name="android:textColor">#2f490b</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+  </style>
 
-                <style name="entryForm.formControl.text_field.text_area">
-                    <item name="android:layout_height">60dp</item>
-                    <item name="android:gravity">top</item>
-                    <item name="android:imeOptions">actionDone</item>
-                    <item name="android:singleLine">true</item>
-                </style>
+  <style name="entryForm.formControl.text_field">
+    <item name="android:background">@color/white_color</item>
+    <item name="android:padding">5dp</item>
+    <item name="android:textColor">@color/md_emphasis</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:layout_marginBottom">8dp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColorHint">#bbbbbb</item>
+  </style>
 
-        <style name="entryForm.submitButton">
-            <item name="android:padding">6dp</item>
-            <item name="android:background">@color/md_emphasis</item>
-            <item name="android:textColor">#ffffff</item>
-            <item name="android:gravity">center</item>
-            <item name="android:text">Log</item>
-            <item name="android:textSize">20sp</item>
-            <item name="android:textStyle">bold</item>
-        </style>
+  <style name="entryForm.formControl.text_field.text_area">
+    <item name="android:layout_height">60dp</item>
+    <item name="android:gravity">top</item>
+    <item name="android:imeOptions">actionDone</item>
+    <item name="android:singleLine">true</item>
+  </style>
 
-    <style name="mdDialog">
-    </style>
+  <style name="entryForm.submitButton">
+    <item name="android:padding">6dp</item>
+    <item name="android:background">@color/md_emphasis</item>
+    <item name="android:textColor">#ffffff</item>
+    <item name="android:gravity">center</item>
+    <item name="android:text">Log</item>
+    <item name="android:textSize">20sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 
-        <style name="mdDialog.title">
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">60dp</item>
-            <item name="android:background">@color/md_button_bg</item>
-            <item name="android:layout_gravity">center_horizontal</item>
-            <item name="android:gravity">center</item>
-            <item name="android:textColor">@color/white_color</item>
-            <item name="android:textSize">24sp</item>
-        </style>
+  <style name="mdDialog">
+  </style>
 
-        <style name="mdDialog.choices">
-        </style>
+  <style name="mdDialog.title">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">60dp</item>
+    <item name="android:background">@color/md_button_bg</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/white_color</item>
+    <item name="android:textSize">24sp</item>
+  </style>
 
-            <style name="mdDialog.choices.textView">
-                <item name="android:textColor">#000</item>
-                <item name="android:textSize">21sp</item>
-                <item name="android:padding">6dp</item>
-            </style>
+  <style name="mdDialog.choices">
+  </style>
+
+  <style name="mdDialog.choices.textView">
+    <item name="android:textColor">#000</item>
+    <item name="android:textSize">21sp</item>
+    <item name="android:padding">6dp</item>
+  </style>
+
+  <style name="mdNavigation">
+    <item name="android:background">#4c4c4c</item>
+  </style>
+
+  <style name="mdNavigation.icon">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_height">45dp</item>
+    <item name="android:padding">6dp</item>
+  </style>
 
 </resources>

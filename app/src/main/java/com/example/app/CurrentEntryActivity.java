@@ -73,7 +73,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     });
   }
 
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
 

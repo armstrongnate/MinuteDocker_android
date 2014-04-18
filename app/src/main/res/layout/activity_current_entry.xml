@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/md_green"
+              android:id="@+id/container">
+
+  <fragment
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/md_green"
-    android:id="@+id/container">
+    android:layout_height="wrap_content"
+    android:id="@+id/fragment_current_times"
+    android:name="com.example.app.CurrentTimesFragment"
+    tools:layout="@layout/fragment_current_times">
+  </fragment>
+
+  <fragment
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:id="@+id/fragment_entry_form"
+    android:name="com.example.app.EntryFormFragment"
+    tools:layout="@layout/fragment_entry_form">
+  </fragment>
+
+  <Button
+    style="@style/entryForm.submitButton"
+    android:layout_marginLeft="25dp"
+    android:layout_marginRight="25dp"
+    android:id="@+id/log_button"/>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_current_times"
-        android:name="com.example.app.CurrentTimesFragment"
-        tools:layout="@layout/fragment_current_times">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/fragment_mdnavigation"
+      android:name="com.example.app.MDNavigationFragment"
+      tools:layout="@layout/fragment_mdnavigation"
+      android:layout_alignParentBottom="true">
     </fragment>
 
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:id="@+id/fragment_entry_form"
-        android:name="com.example.app.EntryFormFragment"
-        tools:layout="@layout/fragment_entry_form">
-    </fragment>
-
-    <Button
-        style="@style/entryForm.submitButton"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:id="@+id/log_button"/>
+  </RelativeLayout>
 
 </LinearLayout>
