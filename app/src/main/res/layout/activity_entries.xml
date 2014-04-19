@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.example.app.EntriesActivity">
+
+  <android.support.v4.view.ViewPager
+    android:id="@+id/vpPager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+  </android.support.v4.view.ViewPager>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/fragment_mdnavigation"
+      android:name="com.example.app.MDNavigationFragment"
+      tools:layout="@layout/fragment_mdnavigation"
+      android:layout_alignParentBottom="true">
+    </fragment>
+
+  </RelativeLayout>
+
+</RelativeLayout>

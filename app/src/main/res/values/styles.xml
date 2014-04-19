@@ -65,7 +65,7 @@
   </style>
 
   <style name="entryForm.header">
-    <item name="android:textColor">@color/md_dark_green</item>
+    <item name="android:textColor">@color/text_color</item>
     <item name="android:textSize">17sp</item>
     <item name="android:text">Current entry details:</item>
     <item name="android:textStyle">bold</item>

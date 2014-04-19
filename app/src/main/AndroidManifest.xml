@@ -27,6 +27,10 @@
             android:name="com.example.app.CurrentEntryActivity"
             android:label="@string/title_activity_current_entry" >
         </activity>
+        <activity
+            android:name="com.example.app.EntriesActivity"
+            android:label="@string/title_activity_entries" >
+        </activity>
     </application>
 
 </manifest>

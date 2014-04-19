@@ -35,18 +35,16 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 
-public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener, IBeaconConsumer {
+public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener {
   public static final String TAG = CurrentEntryActivity.class.getSimpleName();
   protected Entry currentEntry;
   protected CurrentTimesFragment currentTimesFragment;
   protected EntryFormFragment entryFormFragment;
-  private IBeaconManager iBeaconManager = IBeaconManager.getInstanceForApplication(this);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_current_entry);
-    iBeaconManager.bind(this);
 
     android.app.ActionBar ab = getActionBar();
     ab.setTitle(R.string.app_name);
@@ -157,45 +155,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
   @Override
   public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
     currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
-  }
-
-  public void changeBg() {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        View container = findViewById(R.id.container);
-        container.setBackgroundColor(getResources().getColor(R.color.white_color));
-        Toast.makeText(CurrentEntryActivity.this, "Beacon Found!",
-          Toast.LENGTH_LONG).show();
-      }
-    });
-  }
-
-  // iBeacon
-
-  @Override
-  public void onIBeaconServiceConnect() {
-    iBeaconManager.setMonitorNotifier(new MonitorNotifier() {
-      @Override
-      public void didEnterRegion(Region region) {
-        Log.i(TAG, "I just saw an iBeacon for the first time!");
-        changeBg();
-      }
-
-      @Override
-      public void didExitRegion(Region region) {
-        Log.i(TAG, "I no longer see an iBeacon");
-      }
-
-      @Override
-      public void didDetermineStateForRegion(int state, Region region) {
-        Log.i(TAG, "I have just switched from seeing/not seeing iBeacons: "+state);
-      }
-    });
-
-    try {
-      iBeaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
-    } catch (RemoteException e) {   }
   }
 
 }

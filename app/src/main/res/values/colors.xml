@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="opaque_red">#f00</color>
-    <color name="translucent_red">#80ff0000</color>
-    <color name="white_color">#ffffff</color>
-    <color name="md_button_bg">#e2a301</color>
-    <color name="md_green">#5e9217</color>
-    <color name="md_dark_green">#1d3004</color>
-    <color name="entry_border">#e4e4e4</color>
-    <color name="md_emphasis">#e2a301</color>
-    <color name="md_danger">#a94442</color>
+  <color name="opaque_red">#f00</color>
+  <color name="translucent_red">#80ff0000</color>
+  <color name="white_color">#ffffff</color>
+  <color name="md_button_bg">#e2a301</color>
+  <color name="md_green">#5e9217</color>
+  <color name="md_dark_green">#1d3004</color>
+  <color name="entry_border">#e4e4e4</color>
+  <color name="md_emphasis">#e2a301</color>
+  <color name="md_danger">#a94442</color>
+  <color name="main_bg">#f1f1f1</color>
+  <color name="text_color">#4c4c4c</color>
 </resources>
