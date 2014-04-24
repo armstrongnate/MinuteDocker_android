@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by nate on 3/20/14.
@@ -35,10 +39,14 @@ public class MinuteDockr {
   public static String contactsPath = "contacts.json";
   public static String projectsPath = "projects.json";
   public static String tasksPath = "tasks.json";
+  public static String entriesPath = "entries.json";
 
   private static MinuteDockr instance = null;
   public SharedPreferences sharedPreferences;
   public Context context;
+  private HashMap<Integer, Contact> contacts;
+  private HashMap<Integer, Project> projects;
+  private HashMap<Integer, Task> tasks;
 
   private MinuteDockr(Context appContext) {
     context = appContext;
@@ -76,6 +84,10 @@ public class MinuteDockr {
     return String.format("%s%s?api_key=%s", baseUrl, tasksPath, getCurrentApiKey());
   }
 
+  public String getEntriesUrl(int userId) {
+    return String.format("%s%s?users=%d&api_key=%s", baseUrl, entriesPath, userId, getCurrentApiKey());
+  }
+
   public String getCurrentApiKey() {
     return sharedPreferences.getString(API_KEY_PREFS_KEY, "");
   }
@@ -93,5 +105,89 @@ public class MinuteDockr {
     message.setTypeface(semiBold);
 
     return customDialog;
+  }
+
+  public void getContactsAsync(final AsyncTaskCompleteListener<HashMap<Integer, Contact>> listener) {
+    if (contacts != null) {
+      listener.onTaskComplete(contacts);
+      return;
+    }
+    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        try {
+          contacts = new HashMap<Integer, Contact>();
+          JSONArray jsonContacts = new JSONArray(result);
+          for (int i=0; i<jsonContacts.length(); i++) {
+            Contact contact = Contact.fromJSONObject(jsonContacts.getJSONObject(i));
+            contacts.put(contact.externalId, contact);
+          }
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+        listener.onTaskComplete(contacts);
+      }
+    });
+    apiTask.execute(getContactsUrl());
+  }
+
+  public void getProjectsAsync(final AsyncTaskCompleteListener<HashMap<Integer, Project>> listener) {
+    if (projects != null) {
+      listener.onTaskComplete(projects);
+      return;
+    }
+    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        try {
+          projects = new HashMap<Integer, Project>();
+          JSONArray jsonProjects = new JSONArray(result);
+          for (int i=0; i<jsonProjects.length(); i++) {
+            Project project = Project.fromJSONObject(jsonProjects.getJSONObject(i));
+            projects.put(project.externalId, project);
+          }
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+        listener.onTaskComplete(projects);
+      }
+    });
+    apiTask.execute(getProjectsUrl());
+  }
+
+  public void getTasksAsync(final AsyncTaskCompleteListener<HashMap<Integer, Task>> listener) {
+    if (tasks != null) {
+      listener.onTaskComplete(tasks);
+      return;
+    }
+    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        try {
+          tasks = new HashMap<Integer, Task>();
+          JSONArray jsonTasks = new JSONArray(result);
+          for (int i=0; i<jsonTasks.length(); i++) {
+            Task task = Task.fromJSONObject(jsonTasks.getJSONObject(i));
+            tasks.put(task.externalId, task);
+          }
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+        listener.onTaskComplete(tasks);
+      }
+    });
+    apiTask.execute(getTasksUrl());
   }
 }

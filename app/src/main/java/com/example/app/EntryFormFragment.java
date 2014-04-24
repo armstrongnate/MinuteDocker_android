@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 
 /**
@@ -159,92 +160,61 @@ public class EntryFormFragment extends Fragment {
     if (currentEntry.contactId < 0) {
       setCurrentContact(null);
     }
-    ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+    MinuteDockr.getInstance(getActivity()).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
       @Override
-      public void onTaskComplete(String result) {
-        try {
-          contacts = new ArrayList<Contact>();
-          JSONArray jsonContacts = new JSONArray(result);
-          for (int i=0; i<jsonContacts.length(); i++) {
-            Contact contact = Contact.fromJSONObject(jsonContacts.getJSONObject(i));
-            contacts.add(contact);
-            if (contact.externalId == currentEntry.contactId) {
-              setCurrentContact(contact);
-            }
+      public void onTaskComplete(HashMap<Integer, Contact> results) {
+        contacts = new ArrayList<Contact>();
+        for (HashMap.Entry<Integer, Contact> entry : results.entrySet()) {
+          Contact contact = entry.getValue();
+          contacts.add(contact);
+          if (contact.externalId == currentEntry.contactId) {
+            setCurrentContact(contact);
           }
-        }
-        catch (JSONException e) {
-          Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
-          Log.e(TAG, "Null pointer exception caught: ", e);
         }
         buildContactsDialog();
       }
     });
-    apiTask.execute(MinuteDockr.getInstance(getActivity()).getContactsUrl());
   }
 
   public void getCurrentProject() {
-    ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+    if (currentEntry.projectId < 0) {
+      setCurrentProject(null);
+    }
+    MinuteDockr.getInstance(getActivity()).getProjectsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Project>>() {
       @Override
-      public void onTaskComplete(String result) {
-        try {
-          projects = new ArrayList<Project>();
-          JSONArray jsonProjects = new JSONArray(result);
-          boolean found = false;
-          for (int i=0; i<jsonProjects.length(); i++) {
-            Project project = Project.fromJSONObject(jsonProjects.getJSONObject(i));
-            projects.add(project);
-            if (project.externalId == currentEntry.projectId) {
-              setCurrentProject(project);
-              found = true;
-            }
+      public void onTaskComplete(HashMap<Integer, Project> results) {
+        projects = new ArrayList<Project>();
+        for (HashMap.Entry<Integer, Project> entry : results.entrySet()) {
+          Project project = entry.getValue();
+          projects.add(project);
+          if (project.externalId == currentEntry.projectId) {
+            setCurrentProject(project);
           }
-          if (!found)
-            setCurrentProject(null);
-        }
-        catch (JSONException e) {
-          Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
-          Log.e(TAG, "Null pointer exception caught: ", e);
         }
       }
     });
-    apiTask.execute(MinuteDockr.getInstance(getActivity()).getProjectsUrl());
   }
 
   public void getCurrentTasks() {
     if (currentEntry.taskIds.length < 1) {
       setCurrentTasks(null);
     }
-    ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+    MinuteDockr.getInstance(getActivity()).getTasksAsync(new AsyncTaskCompleteListener<HashMap<Integer, Task>>() {
       @Override
-      public void onTaskComplete(String result) {
-        try {
-          tasks = new ArrayList<Task>();
-          currentTasks = new ArrayList<Task>();
-          JSONArray jsonTasks = new JSONArray(result);
-          for (int i=0; i<jsonTasks.length(); i++) {
-            Task t = Task.fromJSONObject(jsonTasks.getJSONObject(i));
-            if (entryHasTask(currentEntry, t)) {
-              t.isChecked = true;
-              currentTasks.add(t);
-            }
-            tasks.add(t);
+      public void onTaskComplete(HashMap<Integer, Task> results) {
+        tasks = new ArrayList<Task>();
+        currentTasks = new ArrayList<Task>();
+        for (HashMap.Entry<Integer, Task> entry : results.entrySet()) {
+          Task task = entry.getValue();
+          tasks.add(task);
+          if (entryHasTask(currentEntry, task)) {
+            task.isChecked = true;
+            currentTasks.add(task);
           }
-          setCurrentTasks(currentTasks);
         }
-        catch (JSONException e) {
-          Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
-          Log.e(TAG, "Null pointer exception caught: ", e);
-        }
+        setCurrentTasks(currentTasks);
       }
     });
-    apiTask.execute(MinuteDockr.getInstance(getActivity()).getTasksUrl());
   }
 
   private boolean entryHasTask(Entry entry, Task task) {
