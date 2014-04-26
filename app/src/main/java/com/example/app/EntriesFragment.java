@@ -60,7 +60,7 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     return view;
   }
 
-  private void fetchEntries(View view) {
+  private void fetchEntries(final View view) {
     viewHolder.entriesList = (ListView)view.findViewById(R.id.entries_list);
     viewHolder.total = (TextView)view.findViewById(R.id.entries_total_hours);
     setDurationTotal();
@@ -68,14 +68,16 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
     }
     else {
-      entryRows = new ArrayList<EntryRow>();
       ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
         @Override
         public void onTaskComplete(String result) {
-          durationTotal = 0;
-          durationTotal = buildEntryRowsFromJSON(result);
-          setDurationTotal();
-          viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
+          if (getActivity() != null) {
+            entryRows = new ArrayList<EntryRow>();
+            durationTotal = 0;
+            durationTotal = buildEntryRowsFromJSON(result);
+            setDurationTotal();
+            viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
+          }
         }
       });
       String from = null;

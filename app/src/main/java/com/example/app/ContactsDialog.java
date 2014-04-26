@@ -18,6 +18,7 @@ public class ContactsDialog extends SingleChoiceDialog {
 
   public ContactsDialog(SingleChoiceDialogListener singleChoiceDialogListener) {
     listener = singleChoiceDialogListener;
+    contacts = new ArrayList<Contact>();
   }
 
   @Override

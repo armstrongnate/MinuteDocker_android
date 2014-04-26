@@ -15,6 +15,7 @@ public class ProjectsDialog extends SingleChoiceDialog {
 
   public ProjectsDialog(SingleChoiceDialogListener singleChoiceDialogListener) {
     listener = singleChoiceDialogListener;
+    projects = new ArrayList<Project>();
   }
 
   @Override

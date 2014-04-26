@@ -61,6 +61,9 @@ public class EntryFormFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_entry_form, container, false);
+    contacts = new ArrayList<Contact>();
+    projects = new ArrayList<Project>();
+    tasks = new ArrayList<Task>();
     viewHolder = new ViewHolder();
 
     viewHolder.contact = (TextView) rootView.findViewById(R.id.entry_form_contact);
@@ -90,10 +93,10 @@ public class EntryFormFragment extends Fragment {
       public void onItemClick(Object choice) {
         if (choice != null) {
           Contact contact = (Contact) choice;
-          setCurrentContact(contact);
+          setCurrentContact(contact, true);
         }
         else
-          setCurrentContact(null);
+          setCurrentContact(null, true);
         contactsDialog.dismiss();
       }
     });
@@ -103,10 +106,10 @@ public class EntryFormFragment extends Fragment {
       public void onItemClick(Object choice) {
         if (choice != null) {
           Project project = (Project) choice;
-          setCurrentProject(project);
+          setCurrentProject(project, true);
         }
         else
-          setCurrentProject(null);
+          setCurrentProject(null, true);
         projectsDialog.dismiss();
       }
     });
@@ -119,7 +122,7 @@ public class EntryFormFragment extends Fragment {
           if (task.isChecked)
             selectedTasks.add(task);
         }
-        setCurrentTasks(selectedTasks);
+        setCurrentTasks(selectedTasks, true);
       }
     });
 
@@ -158,7 +161,7 @@ public class EntryFormFragment extends Fragment {
 
   public void getCurrentContact() {
     if (currentEntry.contactId < 0) {
-      setCurrentContact(null);
+      setCurrentContact(null, false);
     }
     MinuteDockr.getInstance(getActivity()).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
       @Override
@@ -168,7 +171,7 @@ public class EntryFormFragment extends Fragment {
           Contact contact = entry.getValue();
           contacts.add(contact);
           if (contact.externalId == currentEntry.contactId) {
-            setCurrentContact(contact);
+            setCurrentContact(contact, false);
           }
         }
         buildContactsDialog();
@@ -178,7 +181,7 @@ public class EntryFormFragment extends Fragment {
 
   public void getCurrentProject() {
     if (currentEntry.projectId < 0) {
-      setCurrentProject(null);
+      setCurrentProject(null, false);
     }
     MinuteDockr.getInstance(getActivity()).getProjectsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Project>>() {
       @Override
@@ -188,7 +191,7 @@ public class EntryFormFragment extends Fragment {
           Project project = entry.getValue();
           projects.add(project);
           if (project.externalId == currentEntry.projectId) {
-            setCurrentProject(project);
+            setCurrentProject(project, false);
           }
         }
       }
@@ -197,7 +200,7 @@ public class EntryFormFragment extends Fragment {
 
   public void getCurrentTasks() {
     if (currentEntry.taskIds.length < 1) {
-      setCurrentTasks(null);
+      setCurrentTasks(null, false);
     }
     MinuteDockr.getInstance(getActivity()).getTasksAsync(new AsyncTaskCompleteListener<HashMap<Integer, Task>>() {
       @Override
@@ -212,7 +215,7 @@ public class EntryFormFragment extends Fragment {
             currentTasks.add(task);
           }
         }
-        setCurrentTasks(currentTasks);
+        setCurrentTasks(currentTasks, false);
       }
     });
   }
@@ -255,7 +258,7 @@ public class EntryFormFragment extends Fragment {
     });
   }
 
-  public void setCurrentContact(Contact contact) {
+  public void setCurrentContact(Contact contact, boolean shouldUpdateCurrentEntry) {
     currentContact = contact;
     if (contact != null) {
       currentEntry.contactId = contact.externalId;
@@ -263,19 +266,21 @@ public class EntryFormFragment extends Fragment {
       if (currentEntry.projectId > 0 && currentProject == null)
         return;
       if (currentProject == null || currentProject.contactId != contact.externalId) {
-        setCurrentProject(null);
+        setCurrentProject(null, shouldUpdateCurrentEntry);
       }
       else
-        updateCurrentEntry();
+        if (shouldUpdateCurrentEntry) {
+          updateCurrentEntry();
+        }
     }
     else {
       currentEntry.contactId = -1;
       viewHolder.contact.setText("");
-      setCurrentProject(null);
+      setCurrentProject(null, shouldUpdateCurrentEntry);
     }
   }
 
-  public void setCurrentProject(Project project) {
+  public void setCurrentProject(Project project, boolean shouldUpdateCurrentEntry) {
     currentProject = project;
     if (project != null) {
       currentEntry.projectId = project.externalId;
@@ -285,12 +290,15 @@ public class EntryFormFragment extends Fragment {
       currentEntry.projectId = -1;
       viewHolder.project.setText("");
     }
-    if (projects != null)
+    if (projects != null) {
       buildProjectsDialog();
-    updateCurrentEntry();
+    }
+    if (shouldUpdateCurrentEntry) {
+      updateCurrentEntry();
+    }
   }
 
-  public void setCurrentTasks(ArrayList<Task> tasks) {
+  public void setCurrentTasks(ArrayList<Task> tasks, boolean shouldUpdateCurrentEntry) {
     currentTasks = tasks;
     if (currentTasks != null)
       currentEntry.taskIds = new int[currentTasks.size()];
@@ -306,7 +314,9 @@ public class EntryFormFragment extends Fragment {
     }
     else
       viewHolder.task.setText("");
-    updateCurrentEntry();
+    if (shouldUpdateCurrentEntry) {
+      updateCurrentEntry();
+    }
   }
 
   public void setCurrentDescription(String description) {

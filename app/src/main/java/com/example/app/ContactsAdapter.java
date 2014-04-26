@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 public class ContactsAdapter extends ArrayAdapter<Contact> {
   private ArrayList<Contact> contacts;
+  private int shortCodeDefaultTextColor;
 
   public ContactsAdapter(Context context, int layoutResourceId, ArrayList<Contact> data) {
     super(context, layoutResourceId, new ArrayList<Contact>(data));
@@ -34,17 +35,21 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
     if (v == null) {
       LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       v = inflater.inflate(R.layout.contact_list_item, null);
-
-      Contact contact = contacts.get(i);
-      if (contact != null) {
-        TextView shortCode = (TextView) v.findViewById(R.id.short_code);
+      TextView shortCode = (TextView) v.findViewById(R.id.short_code);
+      shortCodeDefaultTextColor = shortCode.getTextColors().getDefaultColor();
+    }
+    Contact contact = contacts.get(i);
+    if (contact != null) {
+      TextView shortCode = (TextView) v.findViewById(R.id.short_code);
+      if (i == contacts.size() - 1) { // None
+        shortCode.setTextColor(getContext().getResources().getColor(R.color.md_danger));
+        shortCode.setTypeface(Typeface.DEFAULT_BOLD);
+        shortCode.setText(contact.shortCode);
+      }
+      else {
         shortCode.setText(String.format("@%s", contact.shortCode));
-
-        if (i == contacts.size() - 1) {
-          shortCode.setTextColor(getContext().getResources().getColor(R.color.md_danger));
-          shortCode.setTypeface(Typeface.DEFAULT_BOLD);
-          shortCode.setText(contact.shortCode);
-        }
+        shortCode.setTextColor(shortCodeDefaultTextColor);
+        shortCode.setTypeface(Typeface.DEFAULT);
       }
     }
 

@@ -33,8 +33,9 @@ public class TasksDialog extends DialogFragment {
   }
 
   public TasksDialog(TasksDialogListener tasksDialogListener) {
-        listener = tasksDialogListener;
-    }
+    listener = tasksDialogListener;
+    tasks = new ArrayList<Task>();
+  }
 
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
