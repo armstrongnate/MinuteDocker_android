@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,6 +31,7 @@ public class MinuteDockr {
   private static final String PREFS_FILE = "minute_dockr";
   public static final String CURRENT_ACCOUNT_ID_PREFS_KEY = "current_account_id";
   public static final String API_KEY_PREFS_KEY = "api_key";
+  public static final String CURRENT_USER_ID_PREFS_KEY = "user_id";
   private static final String MY_API_KEY = "0e3ec0f390e9b7aff763d64d8cea6c50";
   private static final String TAG = "MinuteDockr";
 
@@ -84,12 +86,21 @@ public class MinuteDockr {
     return String.format("%s%s?api_key=%s", baseUrl, tasksPath, getCurrentApiKey());
   }
 
-  public String getEntriesUrl(int userId) {
-    return String.format("%s%s?users=%d&api_key=%s", baseUrl, entriesPath, userId, getCurrentApiKey());
+  public String getEntriesUrl(String from, String to) {
+    if (from == null && to == null) {
+      return String.format("%s%s?users=%d&api_key=%s", baseUrl, entriesPath, getCurrentUserId(), getCurrentApiKey());
+    }
+    else {
+      return String.format("%s%s?users=%d&from=%s&to=%s&api_key=%s", baseUrl, entriesPath, getCurrentUserId(), from, to, getCurrentApiKey());
+    }
   }
 
   public String getCurrentApiKey() {
     return sharedPreferences.getString(API_KEY_PREFS_KEY, "");
+  }
+
+  public int getCurrentUserId() {
+    return sharedPreferences.getInt(CURRENT_USER_ID_PREFS_KEY, 0);
   }
 
   public View customDialogView(int titleTextId, int messageTextId) {

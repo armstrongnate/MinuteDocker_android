@@ -143,4 +143,30 @@
     <item name="android:padding">6dp</item>
   </style>
 
+  <style name="entries">
+  </style>
+
+    <style name="entries.total">
+      <item name="android:textColor">@color/md_green</item>
+      <item name="android:textSize">20dp</item>
+      <item name="android:padding">10dp</item>
+      <item name="android:background">#f8f8f8</item>
+    </style>
+
+  <style name="entryRow">
+  </style>
+
+    <style name="entryRow.contact">
+      <item name="android:textColor">@color/md_emphasis</item>
+      <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="entryRow.duration">
+      <item name="android:textColor">@color/text_color</item>
+    </style>
+
+    <style name="entryRow.description">
+      <item name="android:textColor">@color/text_color</item>
+    </style>
+
 </resources>

@@ -112,7 +112,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
   @Override
   protected String doInBackground(String... strings) {
     int responseCode;
-    String responseData = null;
+    String responseData = "";
     try {
       URL currentAccountUrl = new URL(strings[0]);
       HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
@@ -122,10 +122,13 @@ public class ApiTask extends AsyncTask<String, Void, String> {
       if (responseCode == HttpURLConnection.HTTP_OK) {
         InputStream inputStream = connection.getInputStream();
         Reader reader = new InputStreamReader(inputStream);
-        int contentLength = connection.getContentLength();
-        char[] charArray = new char[contentLength];
-        reader.read(charArray);
-        responseData = new String(charArray);
+        int nextCharacter; // read() returns an int, we cast it to char later
+        while(true){ // Infinite loop, can only be stopped by a "break" statement
+          nextCharacter = reader.read(); // read() without parameters returns one character
+          if(nextCharacter == -1) // A return value of -1 means that we reached the end
+            break;
+          responseData += (char) nextCharacter; // The += operator appends the character to the end of the string
+        }
       }
     }
     catch (MalformedURLException e) {

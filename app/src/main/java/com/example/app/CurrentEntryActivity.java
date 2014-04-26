@@ -47,7 +47,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     setContentView(R.layout.activity_current_entry);
 
     android.app.ActionBar ab = getActionBar();
-    ab.setTitle(R.string.app_name);
+    ab.setTitle("Dock");
 
     // handle to fragments
     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -122,6 +122,8 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
           currentEntry = Entry.fromJSONObject(jsonEntry);
           currentTimesFragment.setCurrentEntry(currentEntry);
           entryFormFragment.setCurrentEntry(currentEntry);
+          MinuteDockr app = MinuteDockr.getInstance(CurrentEntryActivity.this);
+          app.sharedPreferences.edit().putInt(app.CURRENT_USER_ID_PREFS_KEY, currentEntry.userId).commit();
           Toast.makeText(getApplicationContext(), "Refreshed!",
             Toast.LENGTH_LONG).show();
         }

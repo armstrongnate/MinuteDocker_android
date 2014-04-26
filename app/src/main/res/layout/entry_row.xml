@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="?android:attr/listPreferredItemHeight"
-                android:padding="6dip"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
                 android:id="@+id/entry_row">
 
   <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    style="@style/mdDialog.choices.textView"
+    style="@style/entryRow.contact"
     android:text="Hello world"
     android:id="@+id/entry_row_contact"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="#project_shortcode"
+    android:singleLine="true"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_toRightOf="@+id/entry_row_contact"
+    android:layout_toLeftOf="@+id/entry_row_duration"
+    android:layout_marginTop="1dp"
+    android:textSize="12dp"
+    android:textColor="#c3c2c2"
+    android:id="@+id/entry_row_project"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="02:06"
+    android:layout_alignParentRight="true"
+    android:id="@+id/entry_row_duration"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Added company logo to site footer."
+    android:layout_below="@+id/entry_row_contact"
+    android:id="@+id/entry_row_description"/>
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/entry_row_description"
+    android:text="Tasks: #something"
+    android:textSize="12dp"
+    android:textColor="#a6a6a6"
+    android:id="@+id/entry_row_tasks"/>
 
 </RelativeLayout>

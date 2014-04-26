@@ -12,7 +12,10 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -23,6 +26,15 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
   private int page;
   private ArrayList<EntryRow> entryRows;
   private HashMap<Integer, Contact> contacts;
+  private HashMap<Integer, Project> projects;
+  private HashMap<Integer, Task> tasks;
+  private ViewHolder viewHolder;
+  private double durationTotal;
+
+  private class ViewHolder {
+    ListView entriesList;
+    TextView total;
+  }
 
   public static EntriesFragment newInstance(int page) {
     EntriesFragment fragmentEntries = new EntriesFragment();
@@ -36,47 +48,134 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     page = getArguments().getInt("someInt", 0);
+    durationTotal = 0;
+    viewHolder = new ViewHolder();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_entries, container, false);
+    fetchAssets();
     fetchEntries(view);
     return view;
   }
 
   private void fetchEntries(View view) {
-    final ListView entriesList = (ListView)view.findViewById(R.id.entries_list);
-
-    ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
-      @Override
-      public void onTaskComplete(String result) {
-        try {
-          // get contacts
-          MinuteDockr.getInstance(getActivity()).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
-            @Override
-            public void onTaskComplete(HashMap<Integer, Contact> result) {
-              contacts = result;
-            }
-          });
-
-          // build list of entry rows
-          ArrayList<EntryRow> entryRows = new ArrayList<EntryRow>();
-          JSONArray jsonEntries = new JSONArray(result);
-          for (int i=0; i<jsonEntries.length(); i++) {
-            EntryRow entryRow = EntryRow.fromJSON(jsonEntries.getJSONObject(i), contacts);
-            entryRows.add(entryRow);
-          }
-          entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
+    viewHolder.entriesList = (ListView)view.findViewById(R.id.entries_list);
+    viewHolder.total = (TextView)view.findViewById(R.id.entries_total_hours);
+    setDurationTotal();
+    if (entryRows != null) {
+      viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
+    }
+    else {
+      entryRows = new ArrayList<EntryRow>();
+      ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+        @Override
+        public void onTaskComplete(String result) {
+          durationTotal = 0;
+          durationTotal = buildEntryRowsFromJSON(result);
+          setDurationTotal();
+          viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
         }
-        catch (JSONException e) {
-          Log.e(TAG, "JSONException caught: ", e);
+      });
+      String from = null;
+      String to = null;
+      SimpleDateFormat sdf = new SimpleDateFormat("dd%20MMM%20yyy");
+      switch (page) {
+        case 0: { // today
+          Calendar today = Calendar.getInstance();
+          from = sdf.format(today.getTime());
+          to = from;
+          break;
         }
-        catch (NullPointerException e) {
-          Log.e(TAG, "Null pointer exception caught: ", e);
+        case 1: { // this week - api default
+          break;
+        }
+        case 2: { // this month
+          Calendar calendar = Calendar.getInstance();
+          calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+          from = sdf.format(calendar.getTime());
+          to = sdf.format(Calendar.getInstance().getTime());
+          break;
         }
       }
+      apiTask.execute(MinuteDockr.getInstance(getActivity()).getEntriesUrl(from, to));
+    }
+  }
+
+  private void setDurationTotal() {
+    int hours = (int)Math.floor(durationTotal / 3600);
+    int minutes = (int)Math.floor(durationTotal / 60) % 60;
+    viewHolder.total.setText(String.format("%d hours %d minutes", hours, minutes));
+  }
+
+  private double buildEntryRowsFromJSON(String jsonString) {
+    try {
+      JSONArray jsonEntries = new JSONArray(jsonString);
+      for (int i = 0; i < jsonEntries.length(); i++) {
+        Entry entry = Entry.fromJSONObject(jsonEntries.getJSONObject(i));
+        EntryRow entryRow = new EntryRow();
+        durationTotal += entry.duration;
+
+        // contact
+        Contact contact = contacts.get(entry.contactId);
+        if (contact != null) {
+          entryRow.contact = contact.shortCode;
+        }
+
+        // project
+        Project project = projects.get(entry.projectId);
+        if (project != null) {
+          entryRow.project = project.shortCode;
+        }
+
+        // tasks
+        entryRow.tasks = new String[entry.taskIds.length];
+        for (int j = 0; j < entry.taskIds.length; j++) {
+          Task task = tasks.get(entry.taskIds[j]);
+          if (task != null) {
+            entryRow.tasks[j] = task.shortCode;
+          }
+        }
+
+        entryRow.duration = entry.duration;
+        entryRow.description = entry.description;
+        entryRows.add(entryRow);
+      }
+    }
+    catch (JSONException e) {
+      Log.e(TAG, "JSONException caught: ", e);
+    }
+    catch (NullPointerException e) {
+      Log.e(TAG, "Null pointer exception caught: ", e);
+    }
+
+    return durationTotal;
+  }
+
+  private void fetchAssets() {
+    // get contacts
+    MinuteDockr.getInstance(getActivity()).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
+      @Override
+      public void onTaskComplete(HashMap<Integer, Contact> result) {
+        contacts = result;
+      }
     });
-    apiTask.execute(MinuteDockr.getInstance(getActivity()).getEntriesUrl(18545));
+
+    // get projects
+    MinuteDockr.getInstance(getActivity()).getProjectsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Project>>() {
+      @Override
+      public void onTaskComplete(HashMap<Integer, Project> result) {
+        projects = result;
+      }
+    });
+
+    // get tasks
+    MinuteDockr.getInstance(getActivity()).getTasksAsync(new AsyncTaskCompleteListener<HashMap<Integer, Task>>() {
+      @Override
+      public void onTaskComplete(HashMap<Integer, Task> result) {
+        tasks = result;
+      }
+    });
   }
 }

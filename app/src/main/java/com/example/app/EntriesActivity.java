@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,13 +16,22 @@ import android.view.MenuItem;
 public class EntriesActivity extends ActionBarActivity {
   protected FragmentPagerAdapter adapterViewPager;
 
+  public enum entryPages {
+    TODAY, WEEK, MONTH
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_entries);
+
+    android.app.ActionBar ab = getActionBar();
+    ab.setTitle("Today");
+
     ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
     adapterViewPager = new EntriesPagerAdapter(getSupportFragmentManager());
     vpPager.setAdapter(adapterViewPager);
+    vpPager.setOnPageChangeListener(new EntriesOnPageChangeListener());
   }
 
 
@@ -43,6 +53,38 @@ public class EntriesActivity extends ActionBarActivity {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public class EntriesOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+      android.app.ActionBar ab = EntriesActivity.this.getActionBar();
+      switch (position) {
+        case 0: {
+          ab.setTitle("Today");
+          break;
+        }
+        case 1: {
+          ab.setTitle("This Week");
+          break;
+        }
+        case 2: {
+          ab.setTitle("This Month");
+          break;
+        }
+      }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
   }
 
   public static class EntriesPagerAdapter extends FragmentPagerAdapter {
@@ -79,6 +121,5 @@ public class EntriesActivity extends ActionBarActivity {
       }
     }
   }
-
 
 }
