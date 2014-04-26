@@ -134,8 +134,9 @@ public class LoginActivity extends ActionBarActivity {
           break;
 
         case R.id.button:
-          if (apiKey.getText().toString().equals("test"));
-          apiKey.setText("0e3ec0f390e9b7aff763d64d8cea6c50");
+          if (apiKey.getText().toString().equals("test")) {
+            apiKey.setText("0e3ec0f390e9b7aff763d64d8cea6c50");
+          }
           if (isNetworkAvailable()) {
             ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
               @Override
