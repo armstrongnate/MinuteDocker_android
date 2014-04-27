@@ -49,6 +49,9 @@ public class MinuteDockr {
   private HashMap<Integer, Contact> contacts;
   private HashMap<Integer, Project> projects;
   private HashMap<Integer, Task> tasks;
+  public ApiTask contactsApiTask;
+  public ApiTask projectsApiTask;
+  public ApiTask tasksApiTask;
 
   private MinuteDockr(Context appContext) {
     context = appContext;
@@ -123,27 +126,25 @@ public class MinuteDockr {
       listener.onTaskComplete(contacts);
       return;
     }
-    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+    contactsApiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
         try {
           contacts = new HashMap<Integer, Contact>();
           JSONArray jsonContacts = new JSONArray(result);
-          for (int i=0; i<jsonContacts.length(); i++) {
+          for (int i = 0; i < jsonContacts.length(); i++) {
             Contact contact = Contact.fromJSONObject(jsonContacts.getJSONObject(i));
             contacts.put(contact.externalId, contact);
           }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
         listener.onTaskComplete(contacts);
       }
     });
-    apiTask.execute(getContactsUrl());
+    contactsApiTask.execute(getContactsUrl());
   }
 
   public void getProjectsAsync(final AsyncTaskCompleteListener<HashMap<Integer, Project>> listener) {
@@ -151,27 +152,27 @@ public class MinuteDockr {
       listener.onTaskComplete(projects);
       return;
     }
-    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+    projectsApiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
         try {
           projects = new HashMap<Integer, Project>();
           JSONArray jsonProjects = new JSONArray(result);
-          for (int i=0; i<jsonProjects.length(); i++) {
+          for (int i = 0; i < jsonProjects.length(); i++) {
             Project project = Project.fromJSONObject(jsonProjects.getJSONObject(i));
             projects.put(project.externalId, project);
           }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
         listener.onTaskComplete(projects);
       }
     });
-    apiTask.execute(getProjectsUrl());
+    if (projectsApiTask.getStatus() != AsyncTask.Status.RUNNING) {
+      projectsApiTask.execute(getProjectsUrl());
+    }
   }
 
   public void getTasksAsync(final AsyncTaskCompleteListener<HashMap<Integer, Task>> listener) {
@@ -179,26 +180,26 @@ public class MinuteDockr {
       listener.onTaskComplete(tasks);
       return;
     }
-    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+    tasksApiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
         try {
           tasks = new HashMap<Integer, Task>();
           JSONArray jsonTasks = new JSONArray(result);
-          for (int i=0; i<jsonTasks.length(); i++) {
+          for (int i = 0; i < jsonTasks.length(); i++) {
             Task task = Task.fromJSONObject(jsonTasks.getJSONObject(i));
             tasks.put(task.externalId, task);
           }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
         listener.onTaskComplete(tasks);
       }
     });
-    apiTask.execute(getTasksUrl());
+    if (tasksApiTask.getStatus() != AsyncTask.Status.RUNNING) {
+      tasksApiTask.execute(getTasksUrl());
+    }
   }
 }

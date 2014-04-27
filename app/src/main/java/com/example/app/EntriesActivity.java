@@ -34,7 +34,6 @@ public class EntriesActivity extends ActionBarActivity {
     vpPager.setOnPageChangeListener(new EntriesOnPageChangeListener());
   }
 
-
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -88,7 +87,7 @@ public class EntriesActivity extends ActionBarActivity {
   }
 
   public static class EntriesPagerAdapter extends FragmentPagerAdapter {
-    private static int NUM_PAGES = 3;
+    private static int NUM_PAGES = 2;
 
     public EntriesPagerAdapter(android.support.v4.app.FragmentManager fragmentManager) {
       super(fragmentManager);

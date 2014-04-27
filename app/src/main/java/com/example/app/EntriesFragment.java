@@ -30,6 +30,7 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
   private HashMap<Integer, Task> tasks;
   private ViewHolder viewHolder;
   private double durationTotal;
+  private View view;
 
   private class ViewHolder {
     ListView entriesList;
@@ -50,29 +51,32 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     page = getArguments().getInt("someInt", 0);
     durationTotal = 0;
     viewHolder = new ViewHolder();
+    fetchAssets();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_entries, container, false);
-    fetchAssets();
-    fetchEntries(view);
+    view = inflater.inflate(R.layout.fragment_entries, container, false);
     return view;
   }
 
-  private void fetchEntries(final View view) {
+  private void fetchEntries() {
+    if (view == null) {
+      return;
+    }
     viewHolder.entriesList = (ListView)view.findViewById(R.id.entries_list);
     viewHolder.total = (TextView)view.findViewById(R.id.entries_total_hours);
     setDurationTotal();
     if (entryRows != null) {
+      Log.i(TAG, "entryRows does not equal null for page " + page);
       viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
     }
     else {
+      entryRows = new ArrayList<EntryRow>();
       ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
         @Override
         public void onTaskComplete(String result) {
           if (getActivity() != null) {
-            entryRows = new ArrayList<EntryRow>();
             durationTotal = 0;
             durationTotal = buildEntryRowsFromJSON(result);
             setDurationTotal();
@@ -161,6 +165,9 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       @Override
       public void onTaskComplete(HashMap<Integer, Contact> result) {
         contacts = result;
+        if (projects != null && tasks != null) {
+          fetchEntries();
+        }
       }
     });
 
@@ -169,6 +176,9 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       @Override
       public void onTaskComplete(HashMap<Integer, Project> result) {
         projects = result;
+        if (contacts != null && tasks != null) {
+          fetchEntries();
+        }
       }
     });
 
@@ -177,6 +187,9 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       @Override
       public void onTaskComplete(HashMap<Integer, Task> result) {
         tasks = result;
+        if (contacts != null && tasks != null) {
+          fetchEntries();
+        }
       }
     });
   }

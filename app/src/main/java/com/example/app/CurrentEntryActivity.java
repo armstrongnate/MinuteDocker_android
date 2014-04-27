@@ -3,6 +3,8 @@ package com.example.app;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.net.http.HttpResponseCache;
+import android.os.AsyncTask;
 import android.os.RemoteException;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -33,6 +35,7 @@ import com.radiusnetworks.ibeacon.Region;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Collection;
 
 public class CurrentEntryActivity extends ActionBarActivity implements RefreshActivity, DurationDialogListener {
@@ -69,6 +72,21 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         });
       }
     });
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    MinuteDockr app = MinuteDockr.getInstance(CurrentEntryActivity.this);
+    if (app.contactsApiTask != null && app.contactsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.contactsApiTask.cancel(true);
+    }
+    if (app.projectsApiTask != null && app.projectsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.projectsApiTask.cancel(true);
+    }
+    if (app.tasksApiTask != null && app.tasksApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.tasksApiTask.cancel(true);
+    }
   }
 
   @Override
