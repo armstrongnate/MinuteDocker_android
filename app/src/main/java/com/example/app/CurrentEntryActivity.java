@@ -105,10 +105,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
     if (id == R.id.action_refresh) {
-      View refresher = findViewById(R.id.action_refresh);
-      Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
-      rotation.setRepeatCount(10);
-      refresher.startAnimation(rotation);
       getCurrentEntry();
       return true;
     }
