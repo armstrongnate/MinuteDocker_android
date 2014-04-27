@@ -57,6 +57,9 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_entries, container, false);
+    if (entryRows == null) {
+      fetchEntries();
+    }
     return view;
   }
 
@@ -68,7 +71,6 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     viewHolder.total = (TextView)view.findViewById(R.id.entries_total_hours);
     setDurationTotal();
     if (entryRows != null) {
-      Log.i(TAG, "entryRows does not equal null for page " + page);
       viewHolder.entriesList.setAdapter(new EntryAdapter(getActivity(), R.layout.entry_row, entryRows));
     }
     else {
