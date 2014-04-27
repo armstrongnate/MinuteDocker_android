@@ -3,6 +3,7 @@ package com.example.app;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -49,6 +50,11 @@ public class EntriesActivity extends ActionBarActivity {
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
     if (id == R.id.action_settings) {
+      return true;
+    }
+    if (id == R.id.action_current_entry) {
+      Intent intent = new Intent(EntriesActivity.this, CurrentEntryActivity.class);
+      startActivity(intent);
       return true;
     }
     return super.onOptionsItemSelected(item);

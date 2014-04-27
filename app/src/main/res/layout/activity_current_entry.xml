@@ -30,19 +30,4 @@
     android:layout_marginRight="25dp"
     android:id="@+id/log_button"/>
 
-  <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <fragment
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:id="@+id/fragment_mdnavigation"
-      android:name="com.example.app.MDNavigationFragment"
-      tools:layout="@layout/fragment_mdnavigation"
-      android:layout_alignParentBottom="true">
-    </fragment>
-
-  </RelativeLayout>
-
 </LinearLayout>

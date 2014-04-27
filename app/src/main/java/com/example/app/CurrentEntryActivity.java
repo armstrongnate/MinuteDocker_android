@@ -3,6 +3,7 @@ package com.example.app;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.RemoteException;
@@ -109,6 +110,11 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
       rotation.setRepeatCount(10);
       refresher.startAnimation(rotation);
       getCurrentEntry();
+      return true;
+    }
+    if (id == R.id.action_entries) {
+      Intent intent = new Intent(CurrentEntryActivity.this, EntriesActivity.class);
+      startActivity(intent);
       return true;
     }
     return super.onOptionsItemSelected(item);
