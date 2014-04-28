@@ -130,8 +130,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         try {
           JSONObject jsonEntry = new JSONObject(result);
           setCurrentEntry(Entry.fromJSONObject(jsonEntry));
-          Toast.makeText(getApplicationContext(), "Refreshed!",
-            Toast.LENGTH_LONG).show();
         }
         catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
