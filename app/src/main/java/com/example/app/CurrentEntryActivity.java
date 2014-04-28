@@ -107,6 +107,12 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    getCurrentEntry();
+  }
+
+  @Override
   public void onRefresh() {
     getCurrentEntry();
   }
