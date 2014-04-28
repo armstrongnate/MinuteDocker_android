@@ -44,6 +44,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
   protected Entry currentEntry;
   protected CurrentTimesFragment currentTimesFragment;
   protected EntryFormFragment entryFormFragment;
+  protected MinuteDockr app;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,21 +74,10 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
         });
       }
     });
-  }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    MinuteDockr app = MinuteDockr.getInstance(CurrentEntryActivity.this);
-    if (app.contactsApiTask != null && app.contactsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
-      app.contactsApiTask.cancel(true);
-    }
-    if (app.projectsApiTask != null && app.projectsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
-      app.projectsApiTask.cancel(true);
-    }
-    if (app.tasksApiTask != null && app.tasksApiTask.getStatus() == AsyncTask.Status.RUNNING) {
-      app.tasksApiTask.cancel(true);
-    }
+    // current entry
+    app = MinuteDockr.getInstance(CurrentEntryActivity.this);
+    setCurrentEntry(MinuteDockr.getInstance(CurrentEntryActivity.this).currentEntry);
   }
 
   @Override
@@ -117,12 +107,6 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    getCurrentEntry();
-  }
-
-  @Override
   public void onRefresh() {
     getCurrentEntry();
   }
@@ -139,11 +123,7 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
       public void onTaskComplete(String result) {
         try {
           JSONObject jsonEntry = new JSONObject(result);
-          currentEntry = Entry.fromJSONObject(jsonEntry);
-          currentTimesFragment.setCurrentEntry(currentEntry);
-          entryFormFragment.setCurrentEntry(currentEntry);
-          MinuteDockr app = MinuteDockr.getInstance(CurrentEntryActivity.this);
-          app.sharedPreferences.edit().putInt(app.CURRENT_USER_ID_PREFS_KEY, currentEntry.userId).commit();
+          setCurrentEntry(Entry.fromJSONObject(jsonEntry));
           Toast.makeText(getApplicationContext(), "Refreshed!",
             Toast.LENGTH_LONG).show();
         }
@@ -158,20 +138,13 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     apiTask.execute(MinuteDockr.getInstance(this).getCurrentEntryUrl());
   }
 
-  /**
-   * A placeholder fragment containing a simple view.
-   */
-  public static class PlaceholderFragment extends Fragment {
-
-    public PlaceholderFragment() {
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-      View rootView = inflater.inflate(R.layout.fragment_current_entry, container, false);
-      return rootView;
-    }
+  private void setCurrentEntry(Entry entry) {
+    currentEntry = entry;
+    currentTimesFragment.setCurrentEntry(currentEntry);
+    entryFormFragment.setCurrentEntry(currentEntry);
+    MinuteDockr app = MinuteDockr.getInstance(CurrentEntryActivity.this);
+    app.sharedPreferences.edit().putInt(app.CURRENT_USER_ID_PREFS_KEY, currentEntry.userId).commit();
+    app.currentEntry = currentEntry;
   }
 
   @Override

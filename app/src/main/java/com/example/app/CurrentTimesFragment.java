@@ -39,6 +39,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
   protected DurationDialogFragment durationDialogFragment;
   private GestureDetectorCompat gDetect;
   int currentDurationSeconds;
+  private MinuteDockr app;
 
   Handler timerHandler = new Handler();
   Runnable timerRunnable = new Runnable() {
@@ -56,6 +57,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
   };
 
   public CurrentTimesFragment() {
+    app = MinuteDockr.getInstance(getActivity());
   }
 
   @Override
@@ -73,8 +75,18 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
       }
     });
 
-    setTodayTime();
-    setWeekTime();
+    // today total
+    int hours = (int)Math.floor(app.todayTotal / 3600);
+    int minutes = (int)Math.floor(app.todayTotal / 60) % 60;
+    TextView currentTimeToday = (TextView) rootView.findViewById(R.id.current_time_day);
+    currentTimeToday.setText(String.format("%02d:%02d", hours, minutes));
+
+    // week total
+    hours = (int)Math.floor(app.weekTotal / 3600);
+    minutes = (int)Math.floor(app.weekTotal / 60) % 60;
+    TextView currentTimeWeek = (TextView) rootView.findViewById(R.id.current_time_week);
+    currentTimeWeek.setText(String.format("%02d:%02d", hours, minutes));
+
     return rootView;
   }
 
@@ -89,14 +101,6 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     currentEntry = entry;
     currentDurationSeconds = currentEntry.duration;
     timerHandler.postDelayed(timerRunnable, 0);
-  }
-
-  private void setTodayTime() {
-
-  }
-
-  private void setWeekTime() {
-
   }
 
   public class GestureListener extends GestureDetector.SimpleOnGestureListener {

@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +23,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -46,12 +50,17 @@ public class MinuteDockr {
   private static MinuteDockr instance = null;
   public SharedPreferences sharedPreferences;
   public Context context;
-  private HashMap<Integer, Contact> contacts;
-  private HashMap<Integer, Project> projects;
-  private HashMap<Integer, Task> tasks;
+  public HashMap<Integer, Contact> contacts;
+  public HashMap<Integer, Project> projects;
+  public HashMap<Integer, Task> tasks;
+  public HashMap<Integer, Entry> todayEntries;
+  public HashMap<Integer, Entry> weekEntries;
   public ApiTask contactsApiTask;
   public ApiTask projectsApiTask;
   public ApiTask tasksApiTask;
+  public Entry currentEntry;
+  public double todayTotal;
+  public double weekTotal;
 
   private MinuteDockr(Context appContext) {
     context = appContext;
@@ -201,5 +210,96 @@ public class MinuteDockr {
     if (tasksApiTask.getStatus() != AsyncTask.Status.RUNNING) {
       tasksApiTask.execute(getTasksUrl());
     }
+  }
+
+  public void getCurrentEntry(final AsyncTaskCompleteListener<Entry> listener) {
+    ApiTask apiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        try {
+          JSONObject jsonEntry = new JSONObject(result);
+          currentEntry = Entry.fromJSONObject(jsonEntry);
+          sharedPreferences.edit().putInt(CURRENT_USER_ID_PREFS_KEY, currentEntry.userId).commit();
+          listener.onTaskComplete(currentEntry);
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+      }
+    });
+    apiTask.execute(getCurrentEntryUrl());
+  }
+
+  public void fetchEntries(final int page, final AsyncTaskCompleteListener<HashMap<Integer, Entry>> listener) {
+    switch (page) {
+      case 0: {
+        todayEntries = new HashMap<Integer, Entry>();
+        break;
+      }
+      case 1: {
+        weekEntries = new HashMap<Integer, Entry>();
+        break;
+      }
+    }
+    ApiTask entriesApiTask = new ApiTask(context, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        double durationTotal = 0;
+        HashMap<Integer, Entry> entries = new HashMap<Integer, Entry>();
+        try {
+          JSONArray jsonEntries = new JSONArray(result);
+          for (int i = 0; i < jsonEntries.length(); i++) {
+            Entry entry = Entry.fromJSONObject(jsonEntries.getJSONObject(i));
+            durationTotal += entry.duration;
+            entries.put(entry.externalId, entry);
+          }
+          switch (page) {
+            case 0: {
+              todayEntries = new HashMap<Integer, Entry>(entries);
+              todayTotal = durationTotal;
+              break;
+            }
+            case 1: {
+              weekEntries = new HashMap<Integer, Entry>(entries);
+              weekTotal = durationTotal;
+              break;
+            }
+          }
+          Log.i(TAG, "in entriesApiTask onTaskComplete");
+          listener.onTaskComplete(entries);
+        }
+        catch (JSONException e) {
+          Log.e(TAG, "JSONException caught: ", e);
+        }
+        catch (NullPointerException e) {
+          Log.e(TAG, "Null pointer exception caught: ", e);
+        }
+      }
+    });
+    String from = null;
+    String to = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd%20MMM%20yyy");
+    switch (page) {
+      case 0: { // today
+        Calendar today = Calendar.getInstance();
+        from = sdf.format(today.getTime());
+        to = from;
+        break;
+      }
+      case 1: { // this week - api default
+        break;
+      }
+      case 2: { // this month
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+        from = sdf.format(calendar.getTime());
+        to = sdf.format(Calendar.getInstance().getTime());
+        break;
+      }
+    }
+    entriesApiTask.execute(getEntriesUrl(from, to));
   }
 }

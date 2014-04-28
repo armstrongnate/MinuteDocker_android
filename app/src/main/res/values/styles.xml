@@ -17,6 +17,18 @@
          parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     <item name="android:textStyle">bold</item>
   </style>
+  
+  <style name="AppTheme.Splash">
+    <item name="android:windowAnimationStyle">@style/Animations.SplashScreen</item>
+    <item name="android:windowBackground">@android:color/white</item>
+  </style>
+
+  <style name="Animations" parent="@android:Animation" />
+
+  <style name="Animations.SplashScreen">
+    <item name="android:windowEnterAnimation">@anim/abc_fade_in</item>
+    <item name="android:windowExitAnimation">@anim/abc_fade_out</item>
+  </style>
 
   <style name="textCenter" parent="@android:style/TextAppearance.Small">
     <item name="android:layout_width">match_parent</item>

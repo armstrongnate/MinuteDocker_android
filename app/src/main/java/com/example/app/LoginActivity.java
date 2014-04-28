@@ -146,7 +146,7 @@ public class LoginActivity extends ActionBarActivity {
                   app.sharedPreferences.edit().putString(app.API_KEY_PREFS_KEY, apiKey.getText().toString()).commit();
                   JSONObject jsonResponse = new JSONObject(result);
                   app.sharedPreferences.edit().putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, jsonResponse.getInt("id")).commit();
-                  Intent intent = new Intent(getActivity(), CurrentEntryActivity.class);
+                  Intent intent = new Intent(getActivity(), MainActivity.class);
                   startActivity(intent);
                 }
                 catch (JSONException e) {

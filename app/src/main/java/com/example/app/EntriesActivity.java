@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,6 +34,21 @@ public class EntriesActivity extends ActionBarActivity {
     adapterViewPager = new EntriesPagerAdapter(getSupportFragmentManager());
     vpPager.setAdapter(adapterViewPager);
     vpPager.setOnPageChangeListener(new EntriesOnPageChangeListener());
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    MinuteDockr app = MinuteDockr.getInstance(EntriesActivity.this);
+    if (app.contactsApiTask != null && app.contactsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.contactsApiTask.cancel(true);
+    }
+    if (app.projectsApiTask != null && app.projectsApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.projectsApiTask.cancel(true);
+    }
+    if (app.tasksApiTask != null && app.tasksApiTask.getStatus() == AsyncTask.Status.RUNNING) {
+      app.tasksApiTask.cancel(true);
+    }
   }
 
   @Override

@@ -46,6 +46,7 @@ public class EntryFormFragment extends Fragment {
   protected ProjectsDialog projectsDialog;
   protected TasksDialog tasksDialog;
   private ViewHolder viewHolder;
+  private MinuteDockr app;
 
   private class ViewHolder {
     public TextView contact;
@@ -55,6 +56,7 @@ public class EntryFormFragment extends Fragment {
   }
 
   public EntryFormFragment() {
+    app = MinuteDockr.getInstance(getActivity());
   }
 
   @Override
@@ -75,14 +77,14 @@ public class EntryFormFragment extends Fragment {
       @Override
       public void onFocusChange(View view, boolean hasFocus) {
         if (!hasFocus)
-          setCurrentDescription(viewHolder.description.getText().toString());
+          setCurrentDescription(viewHolder.description.getText().toString(), true);
       }
     });
     viewHolder.description.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-          setCurrentDescription(viewHolder.description.getText().toString());
+          setCurrentDescription(viewHolder.description.getText().toString(), true);
         }
         return false;
       }
@@ -153,7 +155,7 @@ public class EntryFormFragment extends Fragment {
 
   public void setCurrentEntry(Entry entry) {
     currentEntry = entry;
-    setCurrentDescription(entry.description);
+    setCurrentDescription(entry.description, false);
     getCurrentContact();
     getCurrentProject();
     getCurrentTasks();
@@ -163,61 +165,46 @@ public class EntryFormFragment extends Fragment {
     if (currentEntry.contactId < 0) {
       setCurrentContact(null, false);
     }
-    MinuteDockr.getInstance(getActivity()).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
-      @Override
-      public void onTaskComplete(HashMap<Integer, Contact> results) {
-        contacts = new ArrayList<Contact>();
-        for (HashMap.Entry<Integer, Contact> entry : results.entrySet()) {
-          Contact contact = entry.getValue();
-          contacts.add(contact);
-          if (contact.externalId == currentEntry.contactId) {
-            setCurrentContact(contact, false);
-          }
-        }
-        buildContactsDialog();
+    contacts = new ArrayList<Contact>();
+    for (HashMap.Entry<Integer, Contact> entry : app.contacts.entrySet()) {
+      Contact contact = entry.getValue();
+      contacts.add(contact);
+      if (contact.externalId == currentEntry.contactId) {
+        setCurrentContact(contact, false);
       }
-    });
+    }
+    buildContactsDialog();
   }
 
   public void getCurrentProject() {
     if (currentEntry.projectId < 0) {
       setCurrentProject(null, false);
     }
-    MinuteDockr.getInstance(getActivity()).getProjectsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Project>>() {
-      @Override
-      public void onTaskComplete(HashMap<Integer, Project> results) {
-        projects = new ArrayList<Project>();
-        for (HashMap.Entry<Integer, Project> entry : results.entrySet()) {
-          Project project = entry.getValue();
-          projects.add(project);
-          if (project.externalId == currentEntry.projectId) {
-            setCurrentProject(project, false);
-          }
-        }
+    projects = new ArrayList<Project>();
+    for (HashMap.Entry<Integer, Project> entry : app.projects.entrySet()) {
+      Project project = entry.getValue();
+      projects.add(project);
+      if (project.externalId == currentEntry.projectId) {
+        setCurrentProject(project, false);
       }
-    });
+    }
   }
 
   public void getCurrentTasks() {
     if (currentEntry.taskIds.length < 1) {
       setCurrentTasks(null, false);
     }
-    MinuteDockr.getInstance(getActivity()).getTasksAsync(new AsyncTaskCompleteListener<HashMap<Integer, Task>>() {
-      @Override
-      public void onTaskComplete(HashMap<Integer, Task> results) {
-        tasks = new ArrayList<Task>();
-        currentTasks = new ArrayList<Task>();
-        for (HashMap.Entry<Integer, Task> entry : results.entrySet()) {
-          Task task = entry.getValue();
-          tasks.add(task);
-          if (entryHasTask(currentEntry, task)) {
-            task.isChecked = true;
-            currentTasks.add(task);
-          }
-        }
-        setCurrentTasks(currentTasks, false);
+    tasks = new ArrayList<Task>();
+    currentTasks = new ArrayList<Task>();
+    for (HashMap.Entry<Integer, Task> entry : app.tasks.entrySet()) {
+      Task task = entry.getValue();
+      tasks.add(task);
+      if (entryHasTask(currentEntry, task)) {
+        task.isChecked = true;
+        currentTasks.add(task);
       }
-    });
+    }
+    setCurrentTasks(currentTasks, false);
   }
 
   private boolean entryHasTask(Entry entry, Task task) {
@@ -319,10 +306,12 @@ public class EntryFormFragment extends Fragment {
     }
   }
 
-  public void setCurrentDescription(String description) {
+  public void setCurrentDescription(String description, boolean shouldUpdateCurrentEntry) {
     viewHolder.description.setText(description);
     currentEntry.description = description;
-    updateCurrentEntry();
+    if (shouldUpdateCurrentEntry) {
+      updateCurrentEntry();
+    }
   }
 
   public Entry getCurrentEntry() {
