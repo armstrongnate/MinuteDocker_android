@@ -25,6 +25,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 
@@ -216,6 +218,11 @@ public class EntryFormFragment extends Fragment {
   }
 
   private void buildContactsDialog() {
+    Collections.sort(contacts, new Comparator<Contact>() {
+      public int compare(Contact contact1, Contact contact2) {
+        return contact1.shortCode.compareToIgnoreCase(contact2.shortCode);
+      }
+    });
     contactsDialog.contacts = contacts;
   }
 
