@@ -94,7 +94,7 @@ public class EntryAdapter extends ArrayAdapter<EntryRow> {
       viewHolder.duration = (TextView) v.findViewById(R.id.entry_row_duration);
       int hours = (int) Math.floor(entryRow.duration / 3600);
       int minutes = (int) Math.floor(entryRow.duration / 60) % 60;
-      viewHolder.duration.setText(String.format("%d:%d", hours, minutes));
+      viewHolder.duration.setText(String.format("%02d:%02d", hours, minutes));
     }
   }
 

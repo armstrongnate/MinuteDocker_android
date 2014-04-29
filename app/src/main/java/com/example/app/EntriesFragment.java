@@ -64,6 +64,17 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     return view;
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    app.fetchEntries(page, new AsyncTaskCompleteListener<HashMap<Integer, Entry>>() {
+      @Override
+      public void onTaskComplete(HashMap<Integer, Entry> result) {
+        buildEntryRows();
+      }
+    });
+  }
+
   private void setDurationTotal() {
     double duration;
     switch (page) {
@@ -129,5 +140,6 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       entryRows.add(entryRow);
       adapter.notifyDataSetChanged();
     }
+    entryRows = new ArrayList<EntryRow>(entryRows);
   }
 }
