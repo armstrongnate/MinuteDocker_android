@@ -74,6 +74,8 @@ public class EntryFormFragment extends Fragment {
     viewHolder.project = (TextView) rootView.findViewById(R.id.entry_form_project);
     viewHolder.task = (TextView) rootView.findViewById(R.id.entry_form_tasks);
     viewHolder.description = (EditText) rootView.findViewById(R.id.entry_form_description);
+    viewHolder.description.setHorizontallyScrolling(false);
+    viewHolder.description.setMaxLines(Integer.MAX_VALUE);
 
     viewHolder.description.setOnFocusChangeListener(new View.OnFocusChangeListener() {
       @Override
