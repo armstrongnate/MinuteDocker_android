@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -17,6 +18,7 @@ public class EntryRow {
   public boolean isHeader;
   public String headerText;
   public String description;
+  public Date loggedAt;
 
   public EntryRow() {
     // empty constructor

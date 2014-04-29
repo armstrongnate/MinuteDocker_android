@@ -14,9 +14,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -137,9 +141,21 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
 
       entryRow.duration = entry.duration;
       entryRow.description = entry.description;
+      String loggedAt = entry.loggedAt;
+      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+      try {
+        entryRow.loggedAt = format.parse(loggedAt);
+      } catch (ParseException pe) {
+        pe.printStackTrace();
+      }
       entryRows.add(entryRow);
       adapter.notifyDataSetChanged();
     }
+    Collections.sort(entryRows, new Comparator<EntryRow>() {
+      public int compare(EntryRow r1, EntryRow r2) {
+        return -r1.loggedAt.compareTo(r2.loggedAt);
+      }
+    });
     entryRows = new ArrayList<EntryRow>(entryRows);
   }
 }
