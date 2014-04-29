@@ -16,6 +16,7 @@
   <style name="MyActionBarTitleText"
          parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     <item name="android:textStyle">bold</item>
+    <item name="android:textColor">@color/md_dark_green</item>
   </style>
   
   <style name="AppTheme.Splash">
