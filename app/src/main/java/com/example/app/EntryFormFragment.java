@@ -5,7 +5,10 @@ package com.example.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -248,6 +251,7 @@ public class EntryFormFragment extends Fragment {
     currentEntry.update(getActivity(), new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
+        updateWidget();
         Toast.makeText(getActivity(), "Updated!",
           Toast.LENGTH_LONG).show();
       }
@@ -326,5 +330,14 @@ public class EntryFormFragment extends Fragment {
   public Entry getCurrentEntry() {
     currentEntry.description = viewHolder.description.getText().toString();
     return currentEntry;
+  }
+
+  private void updateWidget() {
+    Intent intent = new Intent(getActivity(), MinuteDockrAppWidgetProvider.class);
+    intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+    int ids[] = AppWidgetManager.getInstance(getActivity().getApplication())
+      .getAppWidgetIds(new ComponentName(getActivity().getApplication(), MinuteDockrAppWidgetProvider.class));
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+    getActivity().sendBroadcast(intent);
   }
 }

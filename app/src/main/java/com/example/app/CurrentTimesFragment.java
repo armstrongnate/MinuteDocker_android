@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -116,14 +119,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-      currentEntry.toggleActive(getActivity(), new AsyncTaskCompleteListener<String>() {
-        @Override
-        public void onTaskComplete(String result) {
-          String flag = currentEntry.isActive ? "Resuming" : "Paused!";
-          Toast.makeText(getActivity(), flag,
-            Toast.LENGTH_LONG).show();
-        }
-      });
+      start();
       return true;
     }
   }
@@ -132,6 +128,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     currentEntry.toggleActive(getActivity(), new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
+        updateWidget();
         String flag = currentEntry.isActive ? "Resuming" : "Paused!";
         Toast.makeText(getActivity(), flag,
           Toast.LENGTH_LONG).show();
@@ -162,6 +159,15 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
           Toast.LENGTH_LONG).show();
       }
     });
+  }
+
+  private void updateWidget() {
+    Intent intent = new Intent(getActivity(), MinuteDockrAppWidgetProvider.class);
+    intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+    int ids[] = AppWidgetManager.getInstance(getActivity().getApplication())
+      .getAppWidgetIds(new ComponentName(getActivity().getApplication(), MinuteDockrAppWidgetProvider.class));
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+    getActivity().sendBroadcast(intent);
   }
 
 }
