@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   private static final String ACTION_CLICKED = "minuteDockrAppWidgetActionClicked";
   private static Entry currentEntry;
-  private static int durationSeconds;
+  private int durationSeconds;
   private ComponentName widget;
   private RemoteViews remoteViews;
   private AppWidgetManager appWidgetManager;
