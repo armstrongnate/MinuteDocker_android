@@ -139,18 +139,19 @@ public class MinuteDockr {
       @Override
       public void onTaskComplete(String result) {
         try {
+          Log.i(TAG, "result is: " + result);
           contacts = new HashMap<Integer, Contact>();
           JSONArray jsonContacts = new JSONArray(result);
           for (int i = 0; i < jsonContacts.length(); i++) {
             Contact contact = Contact.fromJSONObject(jsonContacts.getJSONObject(i));
             contacts.put(contact.externalId, contact);
           }
+          listener.onTaskComplete(contacts);
         } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
         } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
-        listener.onTaskComplete(contacts);
       }
     });
     contactsApiTask.execute(getContactsUrl());
@@ -171,12 +172,12 @@ public class MinuteDockr {
             Project project = Project.fromJSONObject(jsonProjects.getJSONObject(i));
             projects.put(project.externalId, project);
           }
+          listener.onTaskComplete(projects);
         } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
         } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
-        listener.onTaskComplete(projects);
       }
     });
     if (projectsApiTask.getStatus() != AsyncTask.Status.RUNNING) {
@@ -199,12 +200,12 @@ public class MinuteDockr {
             Task task = Task.fromJSONObject(jsonTasks.getJSONObject(i));
             tasks.put(task.externalId, task);
           }
+          listener.onTaskComplete(tasks);
         } catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
         } catch (NullPointerException e) {
           Log.e(TAG, "Null pointer exception caught: ", e);
         }
-        listener.onTaskComplete(tasks);
       }
     });
     if (tasksApiTask.getStatus() != AsyncTask.Status.RUNNING) {
@@ -260,16 +261,16 @@ public class MinuteDockr {
             case 0: {
               todayEntries = new HashMap<Integer, Entry>(entries);
               todayTotal = durationTotal;
+              listener.onTaskComplete(todayEntries);
               break;
             }
             case 1: {
               weekEntries = new HashMap<Integer, Entry>(entries);
               weekTotal = durationTotal;
+              listener.onTaskComplete(weekEntries);
               break;
             }
           }
-          Log.i(TAG, "in entriesApiTask onTaskComplete");
-          listener.onTaskComplete(entries);
         }
         catch (JSONException e) {
           Log.e(TAG, "JSONException caught: ", e);
