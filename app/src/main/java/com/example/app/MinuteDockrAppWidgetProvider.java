@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
@@ -17,28 +18,49 @@ import java.util.HashMap;
  */
 public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   private static final String ACTION_CLICKED = "minuteDockrAppWidgetActionClicked";
-  private Entry currentEntry;
+  private static Entry currentEntry;
+  private static int durationSeconds;
+  private ComponentName widget;
+  private RemoteViews remoteViews;
+  private AppWidgetManager appWidgetManager;
+  private int numAppWidgets = 0;
+  private int[] appWidgetIds;
+
+  private Handler timerHandler = new Handler();
+  private Runnable timerRunnable = new Runnable() {
+
+    @Override
+    public void run() {
+      updateWidgetView();
+      if (currentEntry.isActive) {
+        durationSeconds += 10;
+        timerHandler.postDelayed(this, 10000);
+      }
+    }
+  };
 
   @Override
   public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-    RemoteViews remoteViews;
-    ComponentName widget;
-
+    numAppWidgets = appWidgetIds.length;
+    this.appWidgetIds = appWidgetIds;
     remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
     widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
+    this.appWidgetManager = appWidgetManager;
 
     Intent intent = new Intent(context, CurrentEntryActivity.class);
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
     remoteViews.setOnClickPendingIntent(R.id.widget_labels, pendingIntent);
 
     remoteViews.setOnClickPendingIntent(R.id.widget_action_button, getPendingSelfIntent(context, ACTION_CLICKED));
-    appWidgetManager.updateAppWidget(widget, remoteViews);
     getCurrentEntry(context, false);
   }
 
   @Override
   public void onReceive(Context context, Intent intent) {
     super.onReceive(context, intent);
+    remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+    widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
+    appWidgetManager = AppWidgetManager.getInstance(context);
 
     if (ACTION_CLICKED.equals(intent.getAction())) {
       getCurrentEntry(context, true);
@@ -55,67 +77,42 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   }
 
   private void getCurrentEntry(final Context context, final boolean fromButton) {
-    final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-
-    final RemoteViews remoteViews;
-    final ComponentName widget;
-
-    remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-    widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
-
     remoteViews.setImageViewResource(R.id.widget_action_button, 0);
-    appWidgetManager.updateAppWidget(widget, remoteViews);
+    updateAppWidgets();
 
     MinuteDockr.getInstance(context).getCurrentEntry(new AsyncTaskCompleteListener<Entry>() {
       @Override
-      public void onTaskComplete(final Entry entry) {
-        final String description;
-        if (entry.description != null && entry.description.length() > 0) {
-          description = entry.description;
+      public void onTaskComplete(Entry entry) {
+        timerHandler.removeCallbacks(timerRunnable);
+        currentEntry = entry;
+        durationSeconds = currentEntry.duration;
+        timerHandler.postDelayed(timerRunnable, 0);
+        if (fromButton) {
+          currentEntry.toggleActive(context, new AsyncTaskCompleteListener<String>() {
+            @Override
+            public void onTaskComplete(String result) {
+              updateWidgetView();
+            }
+          });
         }
         else {
-          description = "No description.";
+          updateWidgetView();
         }
-        MinuteDockr.getInstance(context).getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
-          @Override
-          public void onTaskComplete(HashMap<Integer, Contact> result) {
-            Contact contact = result.get(entry.contactId);
-            final String contactShortCode;
-            if (contact != null && contact.shortCode != null && contact.shortCode.length() > 0) {
-              contactShortCode = String.format("@%s", contact.shortCode);
-            }
-            else {
-              contactShortCode = "No contact selected.";
-            }
-            if (fromButton) {
-              currentEntry = entry;
-              currentEntry.toggleActive(context, new AsyncTaskCompleteListener<String>() {
-                @Override
-                public void onTaskComplete(String result) {
-                  updateWidgetView(context, description, contactShortCode, currentEntry.isActive);
-                }
-              });
-            }
-            else {
-              updateWidgetView(context, description, contactShortCode, entry.isActive);
-            }
-          }
-        });
       }
     });
   }
 
-  private void updateWidgetView(Context context, String description, String contact, boolean active) {
-    final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+  private void updateWidgetView() {
+    int hours = (int)Math.floor(durationSeconds / 3600);
+    int minutes = (int)Math.floor(durationSeconds / 60) % 60;
+    remoteViews.setTextViewText(R.id.widget_duration, String.format("%02d:%02d", hours, minutes));
+    remoteViews.setImageViewResource(R.id.widget_action_button, currentEntry.isActive ? R.drawable.widget_pause : R.drawable.widget_play);
+    updateAppWidgets();
+  }
 
-    final RemoteViews remoteViews;
-    final ComponentName widget;
-
-    remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-    widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
-    remoteViews.setTextViewText(R.id.widget_description, description);
-    remoteViews.setTextViewText(R.id.widget_contact, contact);
-    remoteViews.setImageViewResource(R.id.widget_action_button, active ? R.drawable.widget_pause : R.drawable.widget_play);
-    appWidgetManager.updateAppWidget(widget, remoteViews);
+  private void updateAppWidgets() {
+    for (int i=0; i<numAppWidgets; i++) {
+      appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
+    }
   }
 }

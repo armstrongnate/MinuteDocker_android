@@ -147,6 +147,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     currentDurationSeconds = (hours * 3600) + (minutes * 60) + seconds;
     currentEntry.duration = currentDurationSeconds;
     updateCurrentEntry();
+    updateWidget();
     timerHandler.removeCallbacks(timerRunnable);
     timerHandler.postDelayed(timerRunnable, 0);
   }

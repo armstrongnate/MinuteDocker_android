@@ -17,30 +17,27 @@
       android:layout_weight=".75"
       android:padding="12dp"
       android:layout_marginRight="4dp"
-      android:background="@drawable/widget_labels_bg"
-      android:orientation="vertical">
+      android:background="@drawable/widget_labels_bg">
+
+      <TextView
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:gravity="left|center_vertical"
+        android:id="@+id/widget_branding"
+        android:text="@string/app_name"
+        android:textColor="@color/md_emphasis"
+        android:textStyle="bold"/>
 
       <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:singleLine="true"
-        android:textSize="21sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         android:textColor="#2c2c2c"
-        android:layout_marginBottom="-3dp"
-        android:text="MinuteDockr"
-        android:id="@+id/widget_description"/>
-
-      <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_description"
-        android:id="@+id/widget_contact"
-        android:textSize="18sp"
-        android:textColor="@color/md_emphasis"
-        android:textStyle="bold"
-        android:singleLine="true"
-        android:text="Loading..."/>
+        android:text="02:12"
+        android:id="@+id/widget_duration"/>
 
     </LinearLayout>
 
