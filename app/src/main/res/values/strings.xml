@@ -14,5 +14,6 @@
     <string name="title_activity_current_entry">CurrentEntryActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_entries">EntriesActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

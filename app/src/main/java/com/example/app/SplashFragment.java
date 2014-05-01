@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -102,6 +103,10 @@ public class SplashFragment extends Fragment {
       if (apiCallsAreFinished() && progress == NUM_API_CALLS) {
         navigateToCurrentEntry();
       }
+    }
+    else {
+      Toast.makeText(getActivity(), "Network Error!",
+        Toast.LENGTH_LONG).show();
     }
   }
 }

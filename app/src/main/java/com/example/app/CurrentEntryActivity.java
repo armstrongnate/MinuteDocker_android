@@ -94,6 +94,11 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
+    if (id == R.id.action_settings) {
+      Intent intent = new Intent(CurrentEntryActivity.this, SettingsActivity.class);
+      startActivity(intent);
+      return true;
+    }
     if (id == R.id.action_refresh) {
       getCurrentEntry();
       return true;

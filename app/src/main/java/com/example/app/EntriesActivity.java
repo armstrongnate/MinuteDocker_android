@@ -63,6 +63,8 @@ public class EntriesActivity extends ActionBarActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
     if (id == R.id.action_settings) {
+      Intent intent = new Intent(EntriesActivity.this, SettingsActivity.class);
+      startActivity(intent);
       return true;
     }
     if (id == R.id.action_current_entry) {
