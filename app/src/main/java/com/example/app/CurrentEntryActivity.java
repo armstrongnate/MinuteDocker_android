@@ -66,10 +66,10 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
       public void onClick(View view) {
         currentEntry = entryFormFragment.getCurrentEntry();
         currentEntry.duration = currentTimesFragment.currentDurationSeconds;
-        currentEntry.log(CurrentEntryActivity.this, new AsyncTaskCompleteListener<String>() {
+        currentEntry.update(CurrentEntryActivity.this, new AsyncTaskCompleteListener<String>() {
           @Override
           public void onTaskComplete(String result) {
-            getCurrentEntry();
+            logCurrentEntry();
           }
         });
       }
@@ -159,6 +159,15 @@ public class CurrentEntryActivity extends ActionBarActivity implements RefreshAc
   @Override
   public void onDurationDialogPositiveClick(DurationDialogFragment dialogFragment) {
     currentTimesFragment.setDuration(dialogFragment.hours, dialogFragment.minutes, 0);
+  }
+
+  private void logCurrentEntry() {
+    currentEntry.log(this, new AsyncTaskCompleteListener<String>() {
+      @Override
+      public void onTaskComplete(String result) {
+        getCurrentEntry();
+      }
+    });
   }
 
 }

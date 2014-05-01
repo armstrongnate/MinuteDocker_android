@@ -39,7 +39,7 @@ import java.util.HashMap;
  */
 
 public class EntryFormFragment extends Fragment {
-  public static final String TAG = CurrentEntryActivity.class.getSimpleName();
+  public static final String TAG = EntryFormFragment.class.getSimpleName();
   protected Entry currentEntry;
   protected Contact currentContact;
   protected Project currentProject;
@@ -248,6 +248,7 @@ public class EntryFormFragment extends Fragment {
   }
 
   private void updateCurrentEntry() {
+    currentEntry.description = viewHolder.description.getText().toString();
     currentEntry.update(getActivity(), new AsyncTaskCompleteListener<String>() {
       @Override
       public void onTaskComplete(String result) {
