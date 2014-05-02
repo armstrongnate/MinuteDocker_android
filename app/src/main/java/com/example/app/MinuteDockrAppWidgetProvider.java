@@ -19,35 +19,39 @@ import java.util.HashMap;
 public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   private static final String ACTION_CLICKED = "minuteDockrAppWidgetActionClicked";
   private static Entry currentEntry;
-  private int durationSeconds;
+  private static int durationSeconds;
   private ComponentName widget;
-  private RemoteViews remoteViews;
-  private AppWidgetManager appWidgetManager;
-  private int numAppWidgets = 0;
-  private int[] appWidgetIds;
+  private static RemoteViews remoteViews;
+  private static AppWidgetManager appWidgetManager;
+  private static int[] appWidgetIds;
 
-  private Handler timerHandler = new Handler();
-  private Runnable timerRunnable = new Runnable() {
-
-    @Override
-    public void run() {
-      updateWidgetView();
-      if (currentEntry.isActive) {
-        durationSeconds += 10;
-        timerHandler.postDelayed(this, 10000);
-      }
-    }
-  };
+  private static Handler timerHandler;
+  private static Runnable timerRunnable;
 
   @Override
-  public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-    numAppWidgets = appWidgetIds.length;
-    this.appWidgetIds = appWidgetIds;
+  public void onUpdate(Context context, AppWidgetManager _appWidgetManager, int[] _appWidgetIds) {
+    appWidgetIds = _appWidgetIds;
     remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
     widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
-    this.appWidgetManager = appWidgetManager;
+    appWidgetManager = _appWidgetManager;
+    if (timerHandler == null) {
+      timerHandler = new Handler();
+    }
+    if (timerRunnable == null) {
+      timerRunnable = new Runnable() {
 
-    Intent intent = new Intent(context, CurrentEntryActivity.class);
+        @Override
+        public void run() {
+          updateWidgetView();
+          if (currentEntry.isActive) {
+            durationSeconds += 10;
+            timerHandler.postDelayed(this, 10000);
+          }
+        }
+      };
+    }
+
+    Intent intent = new Intent(context, MainActivity.class);
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
     remoteViews.setOnClickPendingIntent(R.id.widget_labels, pendingIntent);
 
@@ -58,15 +62,12 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   @Override
   public void onReceive(Context context, Intent intent) {
     super.onReceive(context, intent);
-    remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-    widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
-    appWidgetManager = AppWidgetManager.getInstance(context);
+    if (remoteViews == null) {
+      remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+    }
 
     if (ACTION_CLICKED.equals(intent.getAction())) {
       getCurrentEntry(context, true);
-    }
-    else if ("android.appwidget.action.APPWIDGET_UPDATE".equals(intent.getAction())) {
-      getCurrentEntry(context, false);
     }
   }
 
@@ -78,12 +79,12 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
 
   private void getCurrentEntry(final Context context, final boolean fromButton) {
     remoteViews.setImageViewResource(R.id.widget_action_button, 0);
+    timerHandler.removeCallbacks(timerRunnable);
     updateAppWidgets();
 
     MinuteDockr.getInstance(context).getCurrentEntry(new AsyncTaskCompleteListener<Entry>() {
       @Override
       public void onTaskComplete(Entry entry) {
-        timerHandler.removeCallbacks(timerRunnable);
         currentEntry = entry;
         durationSeconds = currentEntry.duration;
         timerHandler.postDelayed(timerRunnable, 0);
@@ -102,7 +103,7 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
     });
   }
 
-  private void updateWidgetView() {
+  private static void updateWidgetView() {
     int hours = (int)Math.floor(durationSeconds / 3600);
     int minutes = (int)Math.floor(durationSeconds / 60) % 60;
     remoteViews.setTextViewText(R.id.widget_duration, String.format("%02d:%02d", hours, minutes));
@@ -110,8 +111,8 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
     updateAppWidgets();
   }
 
-  private void updateAppWidgets() {
-    for (int i=0; i<numAppWidgets; i++) {
+  private static void updateAppWidgets() {
+    for (int i=0; i<appWidgetIds.length; i++) {
       appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
     }
   }

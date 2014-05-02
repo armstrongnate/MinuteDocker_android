@@ -60,13 +60,13 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
   };
 
   public CurrentTimesFragment() {
-    app = MinuteDockr.getInstance(getActivity());
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_current_times, null);
+    app = MinuteDockr.getInstance(getActivity());
     gDetect = new GestureDetectorCompat(getActivity(), new GestureListener());
     durationDialogFragment = new DurationDialogFragment();
     currentDuration = (TextView) rootView.findViewById(R.id.current_duration);
@@ -104,6 +104,7 @@ public class CurrentTimesFragment extends android.support.v4.app.Fragment {
     currentEntry = entry;
     currentDurationSeconds = currentEntry.duration;
     timerHandler.postDelayed(timerRunnable, 0);
+    updateWidget();
   }
 
   public class GestureListener extends GestureDetector.SimpleOnGestureListener {
