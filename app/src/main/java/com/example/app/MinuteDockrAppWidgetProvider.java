@@ -20,7 +20,7 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   private static final String ACTION_CLICKED = "minuteDockrAppWidgetActionClicked";
   private static Entry currentEntry;
   private static int durationSeconds;
-  private ComponentName widget;
+  private static ComponentName widget;
   private static RemoteViews remoteViews;
   private static AppWidgetManager appWidgetManager;
   private static int[] appWidgetIds;
@@ -34,22 +34,6 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
     remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
     widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
     appWidgetManager = _appWidgetManager;
-    if (timerHandler == null) {
-      timerHandler = new Handler();
-    }
-    if (timerRunnable == null) {
-      timerRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-          updateWidgetView();
-          if (currentEntry.isActive) {
-            durationSeconds += 10;
-            timerHandler.postDelayed(this, 10000);
-          }
-        }
-      };
-    }
 
     Intent intent = new Intent(context, MainActivity.class);
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -67,6 +51,10 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
     }
 
     if (ACTION_CLICKED.equals(intent.getAction())) {
+      widget = new ComponentName(context, MinuteDockrAppWidgetProvider.class);
+      if (appWidgetManager == null) {
+        appWidgetManager = AppWidgetManager.getInstance(context);
+      }
       getCurrentEntry(context, true);
     }
   }
@@ -79,7 +67,27 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
 
   private void getCurrentEntry(final Context context, final boolean fromButton) {
     remoteViews.setImageViewResource(R.id.widget_action_button, 0);
-    timerHandler.removeCallbacks(timerRunnable);
+
+    if (timerHandler == null) {
+      timerHandler = new Handler();
+    }
+    else {
+      timerHandler.removeCallbacks(timerRunnable);
+    }
+    if (timerRunnable == null) {
+      timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+          updateWidgetView();
+          if (currentEntry.isActive) {
+            durationSeconds += 10;
+            timerHandler.postDelayed(this, 10000);
+          }
+        }
+      };
+    }
+
     updateAppWidgets();
 
     MinuteDockr.getInstance(context).getCurrentEntry(new AsyncTaskCompleteListener<Entry>() {
@@ -112,8 +120,13 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   }
 
   private static void updateAppWidgets() {
-    for (int i=0; i<appWidgetIds.length; i++) {
-      appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
+    if (appWidgetIds == null) {
+      appWidgetManager.updateAppWidget(widget, remoteViews);
+    }
+    else {
+      for (int i=0; i<appWidgetIds.length; i++) {
+        appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
+      }
     }
   }
 }
