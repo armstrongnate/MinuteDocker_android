@@ -33,7 +33,6 @@ public class SplashFragment extends Fragment {
     app = MinuteDockr.getInstance(getActivity());
     progress = 0;
     viewHolder = new ViewHolder();
-    initApp();
   }
 
   @Override
@@ -43,6 +42,7 @@ public class SplashFragment extends Fragment {
     viewHolder.progressBar = (ProgressBar)view.findViewById(R.id.main_progress_bar);
     viewHolder.progressBar.setMax(NUM_API_CALLS);
     viewHolder.progressBar.setProgress(progress);
+    initApp();
     return view;
   }
 
@@ -52,6 +52,9 @@ public class SplashFragment extends Fragment {
   }
 
   private void initApp() {
+    if (apiCallsAreFinished()) {
+      navigateToCurrentEntry();
+    }
     app.getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
       @Override
       public void onTaskComplete(HashMap<Integer, Contact> result) {

@@ -66,7 +66,9 @@ public class MinuteDockrAppWidgetProvider extends AppWidgetProvider {
   }
 
   private void getCurrentEntry(final Context context, final boolean fromButton) {
-    remoteViews.setImageViewResource(R.id.widget_action_button, 0);
+    if (fromButton) {
+      remoteViews.setImageViewResource(R.id.widget_action_button, 0);
+    }
 
     if (timerHandler == null) {
       timerHandler = new Handler();
