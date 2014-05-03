@@ -122,12 +122,13 @@ public class ApiTask extends AsyncTask<String, Void, String> {
       if (responseCode == HttpURLConnection.HTTP_OK) {
         InputStream inputStream = connection.getInputStream();
         Reader reader = new InputStreamReader(inputStream);
-        int nextCharacter; // read() returns an int, we cast it to char later
-        while(true){ // Infinite loop, can only be stopped by a "break" statement
-          nextCharacter = reader.read(); // read() without parameters returns one character
-          if(nextCharacter == -1) // A return value of -1 means that we reached the end
+        int nextCharacter;
+        while (true) {
+          nextCharacter = reader.read();
+          if (nextCharacter == -1) {
             break;
-          responseData += (char) nextCharacter; // The += operator appends the character to the end of the string
+          }
+          responseData += (char) nextCharacter;
         }
       }
     }
