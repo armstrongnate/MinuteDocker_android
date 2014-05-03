@@ -68,6 +68,7 @@ public class SettingsActivity extends ActionBarActivity {
         @Override
         public void onClick(View view) {
           MinuteDockr app = MinuteDockr.getInstance(getActivity());
+          app.contacts = null;
           app.sharedPreferences.edit().remove(app.CURRENT_ACCOUNT_ID_PREFS_KEY).commit();
           Intent intent = new Intent(getActivity(), MainActivity.class);
           startActivity(intent);

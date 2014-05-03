@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:support-v4:+'
     compile 'com.radiusnetworks:AndroidIBeaconLibrary:0.7.6@aar'
+    compile files('libs/gson-2.2.4.jar')
 }
