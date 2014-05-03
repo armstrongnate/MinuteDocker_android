@@ -33,6 +33,7 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
   private ViewHolder viewHolder;
   private MinuteDockr app;
   private EntryAdapter adapter;
+  private EntriesTask entriesTask;
 
   private class ViewHolder {
     ListView entriesList;
@@ -55,7 +56,13 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     viewHolder = new ViewHolder();
     entryRows = new ArrayList<EntryRow>();
     adapter = new EntryAdapter(getActivity(), R.layout.entry_row, entryRows);
-    buildEntryRows();
+    app.fetchEntries(page, new AsyncTaskCompleteListener<HashMap<Integer, Entry>>() {
+      @Override
+      public void onTaskComplete(HashMap<Integer, Entry> result) {
+        entriesTask = new EntriesTask();
+        entriesTask.execute();
+      }
+    });
   }
 
   @Override
@@ -63,20 +70,15 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     View view = inflater.inflate(R.layout.fragment_entries, container, false);
     viewHolder.entriesList = (ListView)view.findViewById(R.id.entries_list);
     viewHolder.total = (TextView)view.findViewById(R.id.entries_total_hours);
+    viewHolder.total.setText("Loading...");
     viewHolder.entriesList.setAdapter(adapter);
-    setDurationTotal();
+    adapter.notifyDataSetChanged();
     return view;
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    app.fetchEntries(page, new AsyncTaskCompleteListener<HashMap<Integer, Entry>>() {
-      @Override
-      public void onTaskComplete(HashMap<Integer, Entry> result) {
-        buildEntryRows();
-      }
-    });
   }
 
   private void setDurationTotal() {
@@ -96,7 +98,9 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
     }
     int hours = (int)Math.floor(duration / 3600);
     int minutes = (int)Math.floor(duration / 60) % 60;
-    viewHolder.total.setText(String.format("%d hours %d minutes", hours, minutes));
+    if (viewHolder.total != null) {
+      viewHolder.total.setText(String.format("%d hours %d minutes", hours, minutes));
+    }
   }
 
   private void buildEntryRows() {
@@ -149,7 +153,6 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
         pe.printStackTrace();
       }
       entryRows.add(entryRow);
-      adapter.notifyDataSetChanged();
     }
     Collections.sort(entryRows, new Comparator<EntryRow>() {
       public int compare(EntryRow r1, EntryRow r2) {
@@ -157,5 +160,20 @@ public class EntriesFragment extends android.support.v4.app.Fragment {
       }
     });
     entryRows = new ArrayList<EntryRow>(entryRows);
+  }
+
+  private class EntriesTask extends AsyncTask<Void,Void, Void> {
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      buildEntryRows();
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+      setDurationTotal();
+      adapter.notifyDataSetChanged();
+    }
   }
 }
