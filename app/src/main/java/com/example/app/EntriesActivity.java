@@ -108,7 +108,7 @@ public class EntriesActivity extends ActionBarActivity {
   }
 
   public static class EntriesPagerAdapter extends FragmentPagerAdapter {
-    private static int NUM_PAGES = 2;
+    private static int NUM_PAGES = 1;
 
     public EntriesPagerAdapter(android.support.v4.app.FragmentManager fragmentManager) {
       super(fragmentManager);

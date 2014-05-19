@@ -146,10 +146,12 @@ public class Entry {
 
   private class HttpAsyncTask extends ApiTask {
     protected EntryApiAction action;
+    protected Context context;
 
     public HttpAsyncTask(Context context, AsyncTaskCompleteListener<String> cb, EntryApiAction action) {
       super(context, cb);
       this.action = action;
+      this.context = context;
     }
 
     @Override
@@ -157,10 +159,10 @@ public class Entry {
       JSONObject params = null;
       if (action == EntryApiAction.UPDATE_ACTION) {
         params = toJSONObject();
-        return ApiTask.put(urls[0], toParams());
+        return ApiTask.put(context, urls[0], toParams());
       }
       else {
-        return ApiTask.post(urls[0], params);
+        return ApiTask.post(context, urls[0], params);
       }
     }
     @Override

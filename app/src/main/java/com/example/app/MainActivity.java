@@ -24,8 +24,10 @@ public class MainActivity extends ActionBarActivity {
     ActionBar ab = getActionBar();
     ab.hide();
     app = MinuteDockr.getInstance(this);
-    int currentAccountId = app.sharedPreferences.getInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, -1);
-    if (currentAccountId == -1) {
+    int currentAccountId = app.sharedPreferences.getInt(MinuteDockr.CURRENT_ACCOUNT_ID_PREFS_KEY, -1);
+    String username = app.sharedPreferences.getString(MinuteDockr.USERNAME_PREFS_KEY, "");
+    String password = app.sharedPreferences.getString(MinuteDockr.PASSWORD_PREFS_KEY, "");
+    if (currentAccountId == -1 || username.length() < 1 || password.length() < 1) {
       navigateToLogin();
     }
     else {

@@ -36,6 +36,8 @@ public class MinuteDockr {
   public static final String CURRENT_ACCOUNT_ID_PREFS_KEY = "current_account_id";
   public static final String API_KEY_PREFS_KEY = "api_key";
   public static final String CURRENT_USER_ID_PREFS_KEY = "user_id";
+  public static final String USERNAME_PREFS_KEY = "username";
+  public static final String PASSWORD_PREFS_KEY = "password";
   private static final String MY_API_KEY = "0e3ec0f390e9b7aff763d64d8cea6c50";
   private static final String TAG = "MinuteDockr";
 
@@ -75,35 +77,31 @@ public class MinuteDockr {
   }
 
   public String getCurrentEntryUrl() {
-    return String.format("%s%s?api_key=%s", baseUrl, currentEntryPath, getCurrentApiKey());
+    return String.format("%s%s", baseUrl, currentEntryPath);
   }
 
   public String getCurrentAccountUrl() {
-    return String.format("%s%s?api_key=%s", baseUrl, currentAccountPath, getCurrentApiKey());
-  }
-
-  public String getCurrentAccountUrl(String apiKey) {
-    return String.format("%s%s?api_key=%s", baseUrl, currentAccountPath, apiKey);
+    return String.format("%s%s", baseUrl, currentAccountPath);
   }
 
   public String getContactsUrl() {
-    return String.format("%s%s?api_key=%s", baseUrl, contactsPath, getCurrentApiKey());
+    return String.format("%s%s", baseUrl, contactsPath);
   }
 
   public String getProjectsUrl() {
-    return String.format("%s%s?api_key=%s", baseUrl, projectsPath, getCurrentApiKey());
+    return String.format("%s%s", baseUrl, projectsPath);
   }
 
   public String getTasksUrl() {
-    return String.format("%s%s?api_key=%s", baseUrl, tasksPath, getCurrentApiKey());
+    return String.format("%s%s", baseUrl, tasksPath);
   }
 
   public String getEntriesUrl(String from, String to) {
     if (from == null && to == null) {
-      return String.format("%s%s?users=%d&api_key=%s", baseUrl, entriesPath, getCurrentUserId(), getCurrentApiKey());
+      return String.format("%s%s?users=%d", baseUrl, entriesPath, getCurrentUserId());
     }
     else {
-      return String.format("%s%s?users=%d&from=%s&to=%s&api_key=%s", baseUrl, entriesPath, getCurrentUserId(), from, to, getCurrentApiKey());
+      return String.format("%s%s?users=%d&from=%s&to=%s", baseUrl, entriesPath, getCurrentUserId(), from, to);
     }
   }
 

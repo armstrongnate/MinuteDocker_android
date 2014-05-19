@@ -5,8 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="api_help_dialog_message">You can find your API Key by logging into MinuteDock online and clicking on Profile.</string>
-    <string name="api_help_dialog_title">API Key?</string>
+    <string name="api_help_dialog_message">MinuteDockr is a mobile client for the MinuteDock service made by a 3rd party. You will need a MinuteDock account to get started.</string>
+    <string name="api_help_dialog_title">What is this?</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="no_internet_dialog_title">Network Error</string>

@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class SplashFragment extends Fragment {
   protected MinuteDockr app;
   protected int progress;
-  protected static int NUM_API_CALLS = 6;
+  protected static int NUM_API_CALLS = 5;
   protected ViewHolder viewHolder;
 
   private class ViewHolder {
@@ -88,13 +88,12 @@ public class SplashFragment extends Fragment {
       public void onTaskComplete(Entry result) {
         onApiTaskComplete(result != null);
         app.fetchEntries(0, listener);
-        app.fetchEntries(1, listener);
       }
     });
   }
 
   private boolean apiCallsAreFinished() {
-    return app.contacts != null && app.projects != null && app.tasks != null && app.todayEntries != null && app.weekEntries != null && app.currentEntry != null;
+    return app.contacts != null && app.projects != null && app.tasks != null && app.todayEntries != null && app.currentEntry != null;
   }
 
   private void onApiTaskComplete(boolean success) {

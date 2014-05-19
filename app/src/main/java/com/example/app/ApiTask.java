@@ -1,11 +1,14 @@
 package com.example.app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -19,6 +22,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -41,7 +46,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
     this.callback = cb;
   }
 
-  public static String post(String url, JSONObject jsonObject){
+  public static String post(Context context, String url, JSONObject jsonObject) {
     InputStream inputStream = null;
     String result = "";
     try {
@@ -58,6 +63,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
 
       httpPost.setHeader("Accept", "application/json");
       httpPost.setHeader("Content-type", "application/json");
+      httpPost.setHeader("Authorization", basicAuthHeader(context));
 
       HttpResponse httpResponse = httpclient.execute(httpPost);
 
@@ -76,7 +82,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
     return result;
   }
 
-  public static String put(String url, JSONObject jsonObject){
+  public static String put(Context context, String url, JSONObject jsonObject) {
     InputStream inputStream = null;
     String result = "";
     try {
@@ -90,6 +96,7 @@ public class ApiTask extends AsyncTask<String, Void, String> {
 
       httpPut.setHeader("Accept", "application/json");
       httpPut.setHeader("Content-type", "application/json");
+      httpPut.setHeader("Authorization", basicAuthHeader(context));
 
       HttpResponse httpResponse = httpclient.execute(httpPut);
 
@@ -109,13 +116,40 @@ public class ApiTask extends AsyncTask<String, Void, String> {
     return result;
   }
 
+  public static String basicAuth(String url, String username, String password) {
+    InputStream inputStream;
+    String result = "";
+    try {
+      HttpClient httpclient = new DefaultHttpClient();
+      URI uri = new URI(url);
+      HttpGet request = new HttpGet(uri);
+      String s = username + ":" + password;
+      request.setHeader("Authorization", "Basic " + Base64.encodeToString(s.getBytes(), Base64.NO_WRAP));
+      HttpResponse httpResponse = httpclient.execute(request);
+
+      inputStream = httpResponse.getEntity().getContent();
+
+      if (inputStream != null) {
+        result = convertInputStreamToString(inputStream);
+      }
+      else
+        result = "Did not work!";
+    }
+    catch (Exception e) {
+      Log.e(TAG, "Exception caught: " + e);
+    }
+
+    return result;
+  }
+
   @Override
   protected String doInBackground(String... strings) {
     int responseCode;
     String responseData = "";
     try {
-      URL currentAccountUrl = new URL(strings[0]);
-      HttpURLConnection connection = (HttpURLConnection) currentAccountUrl.openConnection();
+      URL url = new URL(strings[0]);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestProperty("Authorization", basicAuthHeader(context));
       connection.connect();
 
       responseCode = connection.getResponseCode();
@@ -160,5 +194,12 @@ public class ApiTask extends AsyncTask<String, Void, String> {
     inputStream.close();
     return result;
 
+  }
+
+  private static String basicAuthHeader(Context context) {
+    String username = MinuteDockr.getInstance(context).sharedPreferences.getString(MinuteDockr.USERNAME_PREFS_KEY, "");
+    String password = MinuteDockr.getInstance(context).sharedPreferences.getString(MinuteDockr.PASSWORD_PREFS_KEY, "");
+    String s = username + ":" + password;
+    return "Basic " + Base64.encodeToString(s.getBytes(), Base64.NO_WRAP);
   }
 }

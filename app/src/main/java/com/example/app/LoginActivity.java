@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,7 +78,8 @@ public class LoginActivity extends ActionBarActivity {
   public static class PlaceholderFragment extends Fragment implements View.OnClickListener {
 
     private AlertDialog apiKeyHelpDialog;
-    protected EditText apiKey;
+    protected EditText username;
+    protected EditText password;
     protected SharedPreferences prefs;
     public static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -90,21 +92,19 @@ public class LoginActivity extends ActionBarActivity {
       View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
       MinuteDockr app = MinuteDockr.getInstance(getActivity());
-      String apiKeyString = app.getCurrentApiKey();
 
       TextView logoText = (TextView) rootView.findViewById(R.id.logo_text);
-      TextView helpText = (TextView) rootView.findViewById(R.id.help_text);
-      apiKey = (EditText) rootView.findViewById(R.id.api_key);
-      apiKey.setText(apiKeyString);
+      username = (EditText) rootView.findViewById(R.id.login_username);
+      password = (EditText) rootView.findViewById(R.id.login_password);
       Button button = (Button) rootView.findViewById(R.id.button);
       button.setOnClickListener(this);
       ImageView apiKeyHelp = (ImageView) rootView.findViewById(R.id.api_key_help);
 
       Typeface extraBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Extrabold.ttf");
       Typeface semiBold = Typeface.createFromAsset(getActivity().getAssets(), "Proxima_Nova_Semibold.ttf");
+      username.setTypeface(semiBold);
+      password.setTypeface(semiBold);
       logoText.setTypeface(extraBold);
-      helpText.setTypeface(extraBold);
-      apiKey.setTypeface(semiBold);
       button.setTypeface(extraBold);
 
       createApiHelpDialog();
@@ -134,30 +134,33 @@ public class LoginActivity extends ActionBarActivity {
           break;
 
         case R.id.button:
-          if (apiKey.getText().toString().equals("test")) {
-            apiKey.setText("0e3ec0f390e9b7aff763d64d8cea6c50");
-          }
           if (isNetworkAvailable()) {
-            ApiTask apiTask = new ApiTask(getActivity(), new AsyncTaskCompleteListener<String>() {
+            final String usernameString = username.getText().toString();
+            final String passwordString = password.getText().toString();
+            BasicAuthTask authTask = new BasicAuthTask(getActivity(), usernameString, passwordString, new AsyncTaskCompleteListener<String>() {
               @Override
               public void onTaskComplete(String result) {
+                MinuteDockr app = MinuteDockr.getInstance(getActivity());
                 try {
-                  MinuteDockr app = MinuteDockr.getInstance(getActivity());
-                  app.sharedPreferences.edit().putString(app.API_KEY_PREFS_KEY, apiKey.getText().toString()).commit();
-                  JSONObject jsonResponse = new JSONObject(result);
-                  app.sharedPreferences.edit().putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, jsonResponse.getInt("id")).commit();
-                  Intent intent = new Intent(getActivity(), MainActivity.class);
-                  startActivity(intent);
+                  JSONArray jsonAccounts = new JSONArray(result);
+                  JSONObject firstJsonAccount = jsonAccounts.getJSONObject(0);
+                  if (!firstJsonAccount.isNull("id")) {
+                    SharedPreferences.Editor editor = app.sharedPreferences.edit();
+                    editor.putInt(app.CURRENT_ACCOUNT_ID_PREFS_KEY, firstJsonAccount.getInt("id"));
+                    editor.putString(MinuteDockr.USERNAME_PREFS_KEY, usernameString);
+                    editor.putString(MinuteDockr.PASSWORD_PREFS_KEY, passwordString);
+                    editor.commit();
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                  }
                 }
-                catch (JSONException e) {
-                  Log.e(TAG, "JSONException caught: ", e);
-                }
-                catch (NullPointerException e) {
-                  Log.e(TAG, "NullPointerException caught: ", e);
+                catch (Exception e) {
+                  Log.i(TAG, "exception caught: " + e.toString());
                 }
               }
             });
-            apiTask.execute(MinuteDockr.getInstance(getActivity()).getCurrentAccountUrl(apiKey.getText().toString()));
+
+            authTask.execute("https://minutedock.com/api/v1/accounts.json");
           }
           else {
             // show network error alert dialog
@@ -184,6 +187,26 @@ public class LoginActivity extends ActionBarActivity {
       return networkInfo != null && networkInfo.isConnected();
     }
 
+  }
+
+  private static class BasicAuthTask extends ApiTask {
+    protected String username;
+    protected String password;
+
+    public BasicAuthTask(Context context, String username, String password, AsyncTaskCompleteListener<String> cb) {
+      super(context, cb);
+      this.username = username;
+      this.password = password;
+    }
+
+    @Override
+    protected String doInBackground(String... urls) {
+      return ApiTask.basicAuth(urls[0], username, password);
+    }
+    @Override
+    protected void onPostExecute(String result) {
+      callback.onTaskComplete(result);
+    }
   }
 
 }

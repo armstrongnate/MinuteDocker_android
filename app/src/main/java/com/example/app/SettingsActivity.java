@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -69,7 +70,11 @@ public class SettingsActivity extends ActionBarActivity {
         public void onClick(View view) {
           MinuteDockr app = MinuteDockr.getInstance(getActivity());
           app.contacts = null;
-          app.sharedPreferences.edit().remove(app.CURRENT_ACCOUNT_ID_PREFS_KEY).commit();
+          SharedPreferences.Editor editor = app.sharedPreferences.edit();
+          editor.remove(MinuteDockr.USERNAME_PREFS_KEY);
+          editor.remove(MinuteDockr.PASSWORD_PREFS_KEY);
+          editor.remove(app.CURRENT_ACCOUNT_ID_PREFS_KEY);
+          editor.commit();
           Intent intent = new Intent(getActivity(), MainActivity.class);
           startActivity(intent);
         }
