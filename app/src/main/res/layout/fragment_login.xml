@@ -34,7 +34,7 @@
             android:background="@color/white_color"
             android:paddingLeft="10dp"
             android:textSize="18sp"
-            android:hint="Username"/>
+            android:hint="Email"/>
 
       <EditText
         android:layout_width="match_parent"
