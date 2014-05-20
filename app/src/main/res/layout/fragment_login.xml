@@ -32,7 +32,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:background="@color/white_color"
-            android:paddingLeft="3dp"
+            android:paddingLeft="10dp"
             android:textSize="18sp"
             android:hint="Username"/>
 
@@ -43,7 +43,7 @@
         android:inputType="textPassword"
         android:layout_marginTop="8dp"
         android:background="@color/white_color"
-        android:paddingLeft="3dp"
+        android:paddingLeft="10dp"
         android:textSize="18sp"
         android:hint="Password"/>
 
