@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -155,6 +156,8 @@ public class LoginActivity extends ActionBarActivity {
                   }
                 }
                 catch (Exception e) {
+                  Toast.makeText(getActivity(), "Oops! Try again.",
+                    Toast.LENGTH_LONG).show();
                   Log.i(TAG, "exception caught: " + e.toString());
                 }
               }
