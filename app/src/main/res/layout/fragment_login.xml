@@ -34,6 +34,7 @@
             android:background="@color/white_color"
             android:paddingLeft="10dp"
             android:textSize="18sp"
+            android:inputType="textEmailAddress"
             android:hint="Email"/>
 
       <EditText
