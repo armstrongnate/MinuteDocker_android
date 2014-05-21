@@ -251,9 +251,11 @@ public class MinuteDockr {
         try {
           JSONArray jsonEntries = new JSONArray(result);
           for (int i = 0; i < jsonEntries.length(); i++) {
-            Entry entry = Entry.fromJSONObject(jsonEntries.getJSONObject(i));
-            durationTotal += entry.duration;
-            entries.put(entry.externalId, entry);
+            durationTotal += jsonEntries.getJSONObject(i).getInt("duration");
+            if (page != 1) {
+              Entry entry = Entry.fromJSONObject(jsonEntries.getJSONObject(i));
+              entries.put(entry.externalId, entry);
+            }
           }
           switch (page) {
             case 0: {
@@ -263,9 +265,10 @@ public class MinuteDockr {
               break;
             }
             case 1: {
-              weekEntries = new HashMap<Integer, Entry>(entries);
               weekTotal = durationTotal;
-              listener.onTaskComplete(weekEntries);
+              if (listener != null) {
+                listener.onTaskComplete(weekEntries);
+              }
               break;
             }
           }

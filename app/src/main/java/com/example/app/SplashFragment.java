@@ -55,6 +55,7 @@ public class SplashFragment extends Fragment {
     if (apiCallsAreFinished()) {
       navigateToCurrentEntry();
     }
+    app.fetchEntries(1, null);
     app.getContactsAsync(new AsyncTaskCompleteListener<HashMap<Integer, Contact>>() {
       @Override
       public void onTaskComplete(HashMap<Integer, Contact> result) {
