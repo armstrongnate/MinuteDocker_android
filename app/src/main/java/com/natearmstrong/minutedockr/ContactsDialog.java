@@ -1,12 +1,11 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+import com.natearmstrong.minutedockr.R;
 
 import java.util.ArrayList;
 

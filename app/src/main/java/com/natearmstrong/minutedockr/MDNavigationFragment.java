@@ -1,4 +1,4 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 
 
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.natearmstrong.minutedockr.R;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.

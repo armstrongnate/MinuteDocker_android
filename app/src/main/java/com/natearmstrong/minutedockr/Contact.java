@@ -1,4 +1,4 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 import android.util.Log;
 

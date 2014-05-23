@@ -1,4 +1,4 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -25,17 +24,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.natearmstrong.minutedockr.R;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -204,7 +196,7 @@ public class LoginActivity extends ActionBarActivity {
 
     @Override
     protected String doInBackground(String... urls) {
-      return ApiTask.basicAuth(urls[0], username, password);
+      return basicAuth(urls[0], username, password);
     }
     @Override
     protected void onPostExecute(String result) {

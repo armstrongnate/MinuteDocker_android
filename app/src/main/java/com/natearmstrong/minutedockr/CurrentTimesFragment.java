@@ -1,36 +1,21 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.TimePickerDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GestureDetectorCompat;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
-import java.util.Calendar;
-
 import android.os.Handler;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.natearmstrong.minutedockr.R;
 
 /**
  * Created by nate on 3/23/14.

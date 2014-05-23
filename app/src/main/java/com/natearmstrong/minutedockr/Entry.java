@@ -1,20 +1,10 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Created by nate on 3/23/14.
@@ -159,10 +149,10 @@ public class Entry {
       JSONObject params = null;
       if (action == EntryApiAction.UPDATE_ACTION) {
         params = toJSONObject();
-        return ApiTask.put(context, urls[0], toParams());
+        return put(context, urls[0], toParams());
       }
       else {
-        return ApiTask.post(context, urls[0], params);
+        return post(context, urls[0], params);
       }
     }
     @Override

@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/fragment_current_times"
-    android:name="com.example.app.CurrentTimesFragment"
+    android:name="com.natearmstrong.minutedockr.CurrentTimesFragment"
     tools:layout="@layout/fragment_current_times">
   </fragment>
 
@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:id="@+id/fragment_entry_form"
-    android:name="com.example.app.EntryFormFragment"
+    android:name="com.natearmstrong.minutedockr.EntryFormFragment"
     tools:layout="@layout/fragment_entry_form">
   </fragment>
 

@@ -1,4 +1,4 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 
 
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.natearmstrong.minutedockr.R;
 
 interface RefreshActivity {
   public void onRefresh();

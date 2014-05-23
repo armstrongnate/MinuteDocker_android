@@ -3,6 +3,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.app.MainActivity"
+    tools:context="com.natearmstrong.minutedockr.MainActivity"
     tools:ignore="MergeRootFrame"
     android:background="@color/main_bg" />

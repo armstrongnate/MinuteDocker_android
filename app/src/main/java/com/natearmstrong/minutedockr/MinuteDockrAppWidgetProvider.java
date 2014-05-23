@@ -1,4 +1,4 @@
-package com.example.app;
+package com.natearmstrong.minutedockr;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,11 +7,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import java.util.HashMap;
+import com.natearmstrong.minutedockr.R;
 
 /**
  * Created by nate on 4/29/14.

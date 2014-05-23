@@ -1,6 +1,4 @@
-package com.example.app;
-
-import android.util.Log;
+package com.natearmstrong.minutedockr;
 
 import org.json.JSONObject;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.app" >
+    package="com.natearmstrong.minutedockr" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.app.MainActivity"
+            android:name="com.natearmstrong.minutedockr.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Splash" >
             <intent-filter>
@@ -21,19 +21,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.app.LoginActivity"
+            android:name="com.natearmstrong.minutedockr.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name="com.example.app.CurrentEntryActivity"
+            android:name="com.natearmstrong.minutedockr.CurrentEntryActivity"
             android:label="@string/title_activity_current_entry" >
         </activity>
         <activity
-            android:name="com.example.app.EntriesActivity"
+            android:name="com.natearmstrong.minutedockr.EntriesActivity"
             android:label="@string/title_activity_entries" >
         </activity>
 
-        <receiver android:name="com.example.app.MinuteDockrAppWidgetProvider" >
+        <receiver android:name="com.natearmstrong.minutedockr.MinuteDockrAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -44,7 +44,7 @@
         </receiver>
 
         <activity
-            android:name="com.example.app.SettingsActivity"
+            android:name="com.natearmstrong.minutedockr.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>
