@@ -244,8 +244,6 @@ public class EntryFormFragment extends Fragment {
       @Override
       public void onTaskComplete(String result) {
         updateWidget();
-        Toast.makeText(getActivity(), "Updated!",
-          Toast.LENGTH_LONG).show();
       }
     });
   }
