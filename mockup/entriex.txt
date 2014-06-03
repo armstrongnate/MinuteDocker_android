@@ -1,0 +1,22 @@
+entries = getEntries()
+
+today = []
+thisWeek = []
+thisMonth = []
+
+entries.each do |entry|
+  if entry.today?
+    entryRow = entryRow.new(entry)
+    today << entryRow
+    thisWeek << entriesHeader("This Week") if thisWeek.empty?
+    thisWeek << entryRow
+  elsif entry.thisWeek?
+    thisWeek << entriesHeader(weekOfEntryString(entry)) if thisWeek.empty? || !entriesOnSameWeek(entry, thisMOnth.lastEntry())
+    thisWeek << entryRow
+    thisMonth << entriesHeader(weekOfEntryString(entry)) if thisMonth.empty? || !entriesOnSameWeek(entry, thisMonth.lastEntry())
+    thisMonth << entryRow
+  else
+    thisMonth << entriesHeader(weekOfEntryString(entry)) if thisMonth.empty? || !entriesOnSameWeek(entry, thisMonth.lastEntry())
+    thisMonth << entryRow
+  end
+end
