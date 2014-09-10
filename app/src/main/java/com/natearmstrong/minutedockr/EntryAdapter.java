@@ -46,7 +46,7 @@ public class EntryAdapter extends ArrayAdapter<EntryRow> {
       }
     }
     else {
-      buildEntryRowView(v, entryRow);
+      buildEntryRowView(v, entryRow); // bottleneck. See Wenderlich tutorial part 3 about reusing view using viewholder
     }
     return v;
   }
